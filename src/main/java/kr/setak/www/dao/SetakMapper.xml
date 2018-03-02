@@ -1,0 +1,48 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper
+  PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+  "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="SetakDao">
+
+<!-- 상품조회 -->
+<select id="selectAllItems" resultType="kr.setak.www.domain.OrderItem">
+	SELECT *
+	FROM orderitem
+</select>
+
+<!-- 유저정보조회 -->
+<select id="selectUserInfo" parameterType="String" resultType="kr.setak.www.domain.User">
+	SELECT *
+	FROM user
+	WHERE userId = #{userID}	
+</select>
+
+<!-- 로그인 -->
+<select id="selectLogin" parameterType="kr.setak.www.domain.User" resultType="kr.setak.www.domain.User">
+	SELECT *
+	FROM user
+	WHERE userId = #{userId}
+	<if test="userHp != null and userHp != ''">AND userHp = #{userHp}</if>
+</select>
+
+<!-- 수거신청등록 -->
+<insert id="insertApplyOrder" parameterType="kr.setak.www.domain.Order" useGeneratedKeys="true" keyProperty="orderNo">
+	INSERT INTO applyorder(inDate, state, totalPrice, userNo, orderAdd, deliveryAdd, sameAddCheck, sangseAdd
+		<if test="hopeCollectionDate != null and hopeCollectionDate != ''">,hopeCollectionDate</if>
+		<if test="hopeDeliveryDate != null and hopeDeliveryDate != ''">,hopeDeliveryDate</if>
+		<if test="comment != null and comment != ''">,comment</if>)
+	VALUES(
+		now(), '1', #{totalPrice}, #{userNo}, #{orderAdd}, #{deliveryAdd} , #{sameAddCheck}, #{sangseAdd}
+		<if test="hopeCollectionDate != null and hopeCollectionDate != ''">,#{hopeCollectionDate}</if>
+		<if test="hopeDeliveryDate != null and hopeDeliveryDate != ''">,#{hopeDeliveryDate}</if>
+		<if test="comment != null and comment != ''">,#{comment}</if>)
+</insert>
+
+<!-- 수거신청된 물품등록 -->
+<insert id="insertOrderedItem" parameterType="kr.setak.www.domain.OrderedItem">
+	INSERT INTO ordereditem(no,orderCount,orderNo)
+	VALUES(#{no}, #{orderCount}, #{orderNo})
+</insert>
+
+
+</mapper>
