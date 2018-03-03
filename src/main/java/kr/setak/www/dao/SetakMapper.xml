@@ -44,5 +44,39 @@
 	VALUES(#{no}, #{orderCount}, #{orderNo})
 </insert>
 
+<!-- 웹, 물품등록 -->
+<insert id="insertSetakItem" parameterType="kr.setak.www.domain.OrderItem">
+	INSERT INTO orderitem(name, price)
+	VALUES(#{name}, #{price})
+</insert>
+
+<!-- 웹, 물품수정 -->
+<update id="updateSetakItem" parameterType="kr.setak.www.domain.OrderItem">
+	UPDATE orderitem
+	SET name=#{name}, 
+		price=#{price}
+	WHERE no = #{no}
+</update>
+
+<!-- 웹, 물품삭제 -->
+<insert id="deleteSetakItem" parameterType="int">
+	DELETE FROM orderitem
+	WHERE no = #{no}
+</insert>
+
+<!-- 웹, 하나의 물품조회 -->
+<select id="selectItem" parameterType="int" resultType="kr.setak.www.domain.OrderItem">
+	SELECT *
+	FROM orderitem
+	WHERE no = #{no}
+</select>
+
+<!-- 웹, 스탭조회 -->
+<select id="selectStaffAll" resultType="kr.setak.www.domain.User">
+	SELECT *
+	FROM user
+	WHERE userGrade = 'staff'
+</select>
+
 
 </mapper>

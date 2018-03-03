@@ -134,4 +134,47 @@ public class SetakService {
 		
 		return map;
 	}
+	
+	//웹, 물품등록
+	public Map<String, Object> addSetakItemServ(OrderItem orderItem) {
+		Map<String, Object> map = new HashMap<String, Object>();
+		if(setakDao.insertSetakItem(orderItem) == 1) {
+			map.put("result", "success");
+		}else {
+			map.put("result", "fail");
+		}
+		return map;
+	}
+	
+	//웹, 물품수정
+	public Map<String, Object> modifySetakItemServ(OrderItem orderItem) {
+		Map<String, Object> map = new HashMap<String, Object>();
+		if(setakDao.updateSetakItem(orderItem) == 1) {
+			map.put("result", "success");
+		}else {
+			map.put("result", "fail");
+		}
+		return map;
+	}
+	
+	//웹, 물품삭제
+	public Map<String, Object> removeSetakItemServ(int no) {
+		Map<String, Object> map = new HashMap<String, Object>();
+		if(setakDao.deleteSetakItem(no) == 1) {
+			map.put("result", "success");
+		}else {
+			map.put("result", "fail");
+		}
+		return map;
+	}
+	
+	//웹, 하나의 물품조회
+	public OrderItem readItemServ(int no) {
+		return setakDao.selectItem(no);
+	}
+	
+	//웹, 스탭조회
+	public List<User> readStaffAllServ(){
+		return setakDao.selectStaffAll();
+	}
 }

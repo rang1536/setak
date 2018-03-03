@@ -42,4 +42,31 @@ public class SetakDao {
 	public int insertOrderedItem(OrderedItem orderedItem){
 		return sql.insert("SetakDao.insertOrderedItem", orderedItem);
 	}
+	
+	//웹,물품등록
+	public int insertSetakItem(OrderItem orderItem){
+		return sql.insert("SetakDao.insertSetakItem", orderItem);
+	}
+	
+	//웹,물품수정
+	public int updateSetakItem(OrderItem orderItem){
+		return sql.insert("SetakDao.updateSetakItem", orderItem);
+	}
+	
+	//웹,물품삭제
+	public int deleteSetakItem(int no){
+		return sql.insert("SetakDao.deleteSetakItem", no);
+	}
+	
+	//웹, 하나의 물품조회
+	public OrderItem selectItem(int no) {
+		return sql.selectOne("SetakDao.selectItem", no);
+	}
+	
+	//웹, 스탭조회
+	public List<User> selectStaffAll(){
+		return sql.selectList("SetakDao.selectStaffAll");
+	}
+	
 }
+

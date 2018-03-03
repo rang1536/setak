@@ -99,5 +99,41 @@ public class SetakRestController {
 		return map;
 	}
 	
+	//웹, 세탁물품 등록 
+	@RequestMapping(value="/addSetakItem", method= {RequestMethod.POST,RequestMethod.GET})
+	public Map<String, Object> addSetakItemCtrl(OrderItem orderItem){
+		System.out.println("입력 값  확인 : "+orderItem);
+		
+		Map<String, Object> map = setakService.addSetakItemServ(orderItem);	
+		return map;
+	}
+	
+	//웹, 세탁물품 수정위해 아이템정보 조회 readItemInfo
+	@RequestMapping(value="/readItemInfo", method= {RequestMethod.POST,RequestMethod.GET})
+	public OrderItem readItemInfoCtrl(int no){
+		System.out.println("입력 값  확인 : "+no);
+		
+		OrderItem item = setakService.readItemServ(no);	
+		return item;
+	}
+	
+	//웹, 세탁물품 수정 
+	@RequestMapping(value="/modifySetakItem", method= {RequestMethod.POST,RequestMethod.GET})
+	public Map<String, Object> modifySetakItemCtrl(OrderItem orderItem){
+		System.out.println("입력 값  확인 : "+orderItem);
+		
+		Map<String, Object> map = setakService.modifySetakItemServ(orderItem);	
+		return map;
+	}
+	
+	//웹, 세탁물품 삭제
+	@RequestMapping(value="/removeSetakItem", method= {RequestMethod.POST,RequestMethod.GET})
+	public Map<String, Object> removeSetakItemCtrl(@RequestParam(value="no")int no){
+		System.out.println("입력 값  확인 : "+no);
+		
+		Map<String, Object> map = setakService.removeSetakItemServ(no);	
+		return map;
+	}
+	
 	
 }
