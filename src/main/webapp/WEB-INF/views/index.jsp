@@ -91,13 +91,13 @@
 			type : 'post',
 			success : function(data){
 				var html = '';
-				html += '<table id="modifyItemTb" style="width:90%;font-size:16px;">';
+				html += '<table id="modifyItemTb" style="width:90%;font-size:17px;">';
 				html += '<tr>';
 				html += '<th style="width:35%;">물품명</th>';
 				html += '<td><input type="text" name="name" id="name" value="'+data.name+'"/></td>';
 				html += '</tr><tr>';
-				html += '<th>가격</th>';
-				html += '<td><input type="number" name="price" id="price" value="'+data.price+'"/></td>';
+				html += '<th><br/>가격</th>';
+				html += '<td><br/><input type="number" name="price" id="price" value="'+data.price+'"/></td>';
 				html += '</tr><tr>';
 				/* html += '<td colspan="2">';
 				html += '<button type="button" class="btn btn-labeled btn-success" style="font-weight:bold;" onclick="addSetakItem()">물품등록</button>';
@@ -227,14 +227,14 @@
 			type : 'post',
 			success : function(data){
 				var html = '';
-				html += '<table id="modifyStaffTb" style="width:90%;font-size:16px;">';
+				html += '<table id="modifyStaffTb" style="width:90%;font-size:17px;">';
 				html += '<tr>';
 				html += '<th style="width:35%;">스탭 이름</th>';
 				html += '<td><input type="text" name="userId" id="userId" value="'+data.userId+'"/>';
 				html += '<input type="hidden" name="userNo" id="userNo" value="'+data.userNo+'"/></td>';
 				html += '</tr><tr>';
-				html += '<th>휴대폰</th>';
-				html += '<td><input type="number" name="userHp" id="userHp" value="'+data.userHp+'"/></td>';
+				html += '<th><br/>휴대폰</th>';
+				html += '<td><br/><input type="number" name="userHp" id="userHp" value="'+data.userHp+'"/></td>';
 				html += '</tr><tr>';
 				/* html += '<td colspan="2">';
 				html += '<button type="button" class="btn btn-labeled btn-success" style="font-weight:bold;" onclick="modifyStaff()">수정</button>';
@@ -328,8 +328,8 @@
 <body>
 
 <section id="page1" data-role="page">
-    <header data-role="header" data-tap-toggle="false" data-position="fixed" style="background-color:#ffffff;">
-    	<img src="resources/img/jbLogo.PNG"/>
+    <header data-role="header" data-tap-toggle="false" data-position="fixed" style="background-color:#F6F6F6;">
+    	<img src="resources/img/ac_logo.png" />
     	<!-- <a class="ui-btn-right" href="#page9" data-icon="gear" style="background-color:rgba(255,255,255,0.5);margin-top:15px;"><font style="font-weight:bold;color:red;">MY</font></a> -->
     	<div data-role="navbar">
             <ul>
@@ -411,8 +411,8 @@
 
 
 <section id="page2" data-role="page">
-    <header data-role="header" data-tap-toggle="false" data-position="fixed" style="background-color:#ffffff;">
-    	<img src="resources/img/jbLogo.PNG"/>
+    <header data-role="header" data-tap-toggle="false" data-position="fixed" style="background-color:#F6F6F6;">
+    	<img src="resources/img/ac_logo.png"/>
     	<!-- <a class="ui-btn-right" href="#page9" data-icon="gear" style="background-color:rgba(255,255,255,0.5);margin-top:15px;"><font style="font-weight:bold;color:red;">MY</font></a> -->
     	<div data-role="navbar">
             <ul>
@@ -494,8 +494,8 @@
 
 
 <section id="page3" data-role="page">
-    <header data-role="header" data-tap-toggle="false" data-position="fixed" style="background-color:#ffffff;">
-    	<img src="resources/img/jbLogo.PNG"/>
+    <header data-role="header" data-tap-toggle="false" data-position="fixed" style="background-color:#F6F6F6;">
+    	<img src="resources/img/ac_logo.png"/>
     	<!-- <a class="ui-btn-right" href="#page9" data-icon="gear" style="background-color:rgba(255,255,255,0.5);margin-top:15px;"><font style="font-weight:bold;color:red;">MY</font></a> -->
     	<div data-role="navbar">
             <ul>

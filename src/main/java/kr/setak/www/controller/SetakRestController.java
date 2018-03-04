@@ -32,7 +32,7 @@ public class SetakRestController {
 		System.out.println("앱에서 넘어온 pw값  확인 : "+userHp);
 		
 		Map<String, Object> map = new HashMap<String, Object>();
-		Map<String, Object> resultMap = setakService.readLoginServ(userId, userHp);
+		/*Map<String, Object> resultMap = setakService.readLoginServ(userId, userHp);*/
 		
 		/*map.put("result", resultMap.get("result"));
 		if(resultMap.get("result").equals("success")){

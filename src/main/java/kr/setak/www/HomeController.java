@@ -35,7 +35,7 @@ public class HomeController {
 		model.addAttribute("itemList", itemList);
 		model.addAttribute("staffList", staffList);
 		
-		return "home";
+		return "index";
 	}
 	
 }
