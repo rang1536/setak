@@ -177,4 +177,42 @@ public class SetakService {
 	public List<User> readStaffAllServ(){
 		return setakDao.selectStaffAll();
 	}
+	
+	//웹, 스탭등록
+	public Map<String, Object> addStaffServ(User user) {
+		Map<String, Object> map = new HashMap<String, Object>();
+		if(setakDao.insertStaff(user) == 1) {
+			map.put("result", "success");
+		}else {
+			map.put("result", "fail");
+		}
+		return map;
+	}
+	
+	//웹, 스탭수정
+	public Map<String, Object> modifyStaffServ(User user) {
+		Map<String, Object> map = new HashMap<String, Object>();
+		if(setakDao.updateStaff(user) == 1) {
+			map.put("result", "success");
+		}else {
+			map.put("result", "fail");
+		}
+		return map;
+	}
+	
+	//웹, 스탭삭제
+	public Map<String, Object> removeStaffServ(int userNo) {
+		Map<String, Object> map = new HashMap<String, Object>();
+		if(setakDao.deleteStaff(userNo) == 1) {
+			map.put("result", "success");
+		}else {
+			map.put("result", "fail");
+		}
+		return map;
+	}
+	
+	//웹, 하나의스탭조회
+	public User readStaffServ(int userNo){
+		return setakDao.selectStaff(userNo);
+	}
 }

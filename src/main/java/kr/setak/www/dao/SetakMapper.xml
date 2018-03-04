@@ -78,5 +78,31 @@
 	WHERE userGrade = 'staff'
 </select>
 
+<!-- 웹, 스탭등록 -->
+<insert id="insertStaff" parameterType="kr.setak.www.domain.User">
+	INSERT INTO user(userId, userHp, userGrade)
+	VALUES(#{userId}, #{userHp}, 'staff')
+</insert>
+
+<!-- 웹, 스탭정보수정 -->
+<update id="updateStaff" parameterType="kr.setak.www.domain.User">
+	UPDATE user
+	SET userId = #{userId},
+		userHp = #{userHp},
+	WHERE userNo = #{userNo}	
+</update>
+
+<!-- 웹, 스탭삭제 -->
+<delete id="deleteStaff" parameterType="int">
+	DELETE FROM user
+	WHERE userNo = #{userNo}
+</delete>
+
+<!-- 웹, 하나의스탭조회 -->
+<select id="selectStaff" resultType="kr.setak.www.domain.User">
+	SELECT *
+	FROM user
+	WHERE userNo = #{userNo}
+</select>
 
 </mapper>

@@ -134,6 +134,40 @@ public class SetakRestController {
 		Map<String, Object> map = setakService.removeSetakItemServ(no);	
 		return map;
 	}
+	//웹, 스탭등록 
+	@RequestMapping(value="/addStaff", method= {RequestMethod.POST,RequestMethod.GET})
+	public Map<String, Object> addSetakItemCtrl(User user){
+		System.out.println("입력 값  확인 : "+user);
+		
+		Map<String, Object> map = setakService.addStaffServ(user);	
+		return map;
+	}
+	
+	//웹, 스탭수정 
+	@RequestMapping(value="/modifyStaff", method= {RequestMethod.POST,RequestMethod.GET})
+	public Map<String, Object> modifyStaffCtrl(User user){
+		System.out.println("입력 값  확인 : "+user);
+		
+		Map<String, Object> map = setakService.modifyStaffServ(user);	
+		return map;
+	}
 	
 	
+	//웹, 스탭 수정위해 스탭정보 조회
+	@RequestMapping(value="/readStaffInfo", method= {RequestMethod.POST,RequestMethod.GET})
+	public User readStaffInfoCtrl(@RequestParam(value="userNo")int userNo){
+		System.out.println("입력 값  확인 : "+userNo);
+		
+		User user = setakService.readStaffServ(userNo);
+		return user;
+	}
+	
+	//웹, 스탭삭제
+	@RequestMapping(value="/removeStaff", method= {RequestMethod.POST,RequestMethod.GET})
+	public Map<String, Object> removeStaffItemCtrl(@RequestParam(value="userNo")int userNo){
+		System.out.println("입력 값  확인 : "+userNo);
+		
+		Map<String, Object> map = setakService.removeStaffServ(userNo);	
+		return map;
+	}
 }

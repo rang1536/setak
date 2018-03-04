@@ -68,5 +68,24 @@ public class SetakDao {
 		return sql.selectList("SetakDao.selectStaffAll");
 	}
 	
+	//웹,물품등록
+	public int insertStaff(User user){
+		return sql.insert("SetakDao.insertStaff", user);
+	}
+	
+	//웹,물품수정
+	public int updateStaff(User user){
+		return sql.insert("SetakDao.updateStaff", user);
+	}
+	
+	//웹,물품삭제
+	public int deleteStaff(int userNo){
+		return sql.insert("SetakDao.deleteStaff", userNo);
+	}
+	
+	//웹, 하나의스탭 조회
+	public User selectStaff(int userNo){
+		return sql.selectOne("SetakDao.selectStaff", userNo);
+	}
 }
 

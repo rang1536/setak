@@ -260,9 +260,10 @@
 	    			var userId = $('#modifyStaffTb').find('#userId').val();
 	    			var userHp = $('#modifyStaffTb').find('#userHp').val();
 	    			var userNo = $('#modifyStaffTb').find('#userNo').val();
+	    			
 	    			$.ajax({
 	    				url : 'modifySetakItem',
-	    				data : {'userId':userId, 'userHp':userHp},
+	    				data : {'userId':userId, 'userHp':userHp, 'userNo': userNo},
 	    				dataType : 'json',
 	    				type : 'post',
 	    				success:function(data){
@@ -478,7 +479,7 @@
     					<td>${list.userHp }</td>
     					<td>${list.userGrade }</td>
     					<td style="width:50px;" onclick="modifyStaff('${list.userNo}');"><img src="resources/img/edit.jpg" style="width:40px;"/></td>
-    					<td style="width:50px;" onclick="removeStaff('${list.userNo}');"><img src="resources/img/cancel.jpg" style="width:40px;"/></td>
+    					<td style="width:50px;" onclick="removeStaff('${list.userNo}');"><img src="resources/img/cencel.jpg" style="width:40px;"/></td>
     				</tr>
     			</c:forEach>
     		</table>
