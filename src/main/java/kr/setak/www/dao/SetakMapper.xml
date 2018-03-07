@@ -105,4 +105,25 @@
 	WHERE userNo = #{userNo}
 </select>
 
+<!-- 토큰 저장 -->
+<update id="updateUserToken" parameterType="kr.setak.www.domain.User">
+	UPDATE user
+	SET token = #{token}
+	WHERE userNo = #{userNo}
+</update>
+
+<!-- 푸쉬를 위한 스탭조회 -->
+<select id="selectStaffNAdmin" resultType="kr.setak.www.domain.User">
+	SELECT *
+	FROM user
+	WHERE userGrade = 'staff'
+	OR userGrade = 'admin'
+</select>
+
+<!-- 회원가입 -->
+<insert id="insertUser" parameterType="kr.setak.www.domain.User" useGeneratedKeys="true" keyProperty="userNo">
+	INSERT INTO user(userId, userHp, userGrade, regDate, orderCount, token, gender)
+	VALUES(#{userId}, #{userHp}, 'user', now(), 0, #{token}, #{gender})
+</insert>
+
 </mapper>

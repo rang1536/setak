@@ -405,7 +405,7 @@
     
     <!-- 푸터  -->
     <div style="overflow: hidden;" data-role="footer" data-tap-toggle="false" data-position="fixed" onclick="footerBanner();">
-	   <img src="resources/img/jbFoot.PNG" style="width:100%;height:65px;margin-left:0px;"/>
+	   <img src="resources/img/jbFoot.png" style="width:100%;height:65px;margin-left:0px;"/>
 	</div>
 </section> 
 
@@ -488,7 +488,7 @@
     
     <!-- 푸터  -->
     <div style="overflow: hidden;" data-role="footer" data-tap-toggle="false" data-position="fixed" onclick="footerBanner();">
-	   <img src="resources/img/jbFoot.PNG" style="width:100%;height:65px;margin-left:0px;"/>
+	   <img src="resources/img/jbFoot.png" style="width:100%;height:65px;margin-left:0px;"/>
 	</div>
 </section> 
 
@@ -508,12 +508,12 @@
     </header>
     
     <div class="content" data-role="content">
-    	<div style="width:100%;border:1px solid #ddd;background-color:#670000;color:#FFFFFF;">
-    		<p style="width:100%;text-align:center;font-size:15px;">◇ 회원 푸쉬알림 발송 ◇</p>
+    	<div style="width:100%;border:1px solid #ddd;background-color:#670000;color:#FFFFFF;padding-top:2px;">
+    		<p style="width:100%;text-align:center;font-size:15px;">회원 푸쉬알림 발송</p>
     	</div>
-    	<div style="width:100%;border:1px solid #ddd;background-color:#FAECC5;font-weight:bold;">
+    	<div style="width:100%;border:1px solid #ddd;background-color:#FAECC5;padding-top:5px;">
    			<!-- <p>&nbsp;◇ 한달 2만원으로 누리는 업체홍보!!</p> -->
-   			<p>&nbsp;◇ 보내실 내용을 입력하시면 세탁풍경 앱 회원분들께 푸쉬알림이 발송됩니다</p>
+   			<p style="padding-top:3px;">&nbsp;◇ 보내실 내용을 입력하시면 세탁풍경 앱 회원분들께 푸쉬알림이 발송됩니다</p>
    			
    		</div>
    		<br/>
@@ -535,7 +535,7 @@
     
     <!-- 푸터  -->
     <div style="overflow: hidden;" data-role="footer" data-tap-toggle="false" data-position="fixed" onclick="footerBanner();">
-	   <img src="resources/img/jbFoot.PNG" style="width:100%;height:65px;margin-left:0px;"/>
+	   <img src="resources/img/jbFoot.png" style="width:100%;height:65px;margin-left:0px;"/>
 	</div>
 </section> 
 

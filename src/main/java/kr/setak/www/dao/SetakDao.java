@@ -87,5 +87,25 @@ public class SetakDao {
 	public User selectStaff(int userNo){
 		return sql.selectOne("SetakDao.selectStaff", userNo);
 	}
+	
+	//토큰저장
+	public int updateUserToken(User user){
+		return sql.update("SetakDao.updateUserToken", user);
+	}
+	
+	//관리자,스탭조회
+	public List<User> selectStaffNAdmin(){
+		return sql.selectList("SerakDao.selectStaffNAdmin");
+	}
+	
+	//회원가입
+	public int insertUser(User user){
+		return sql.insert("SetakDao.insertUser", user);
+	}
+	
+	//중복회원조회
+	public List<User> selectSameUserCheck(User user){
+		return sql.selectList("SetakDao.selectLogin", user);
+	}
 }
 

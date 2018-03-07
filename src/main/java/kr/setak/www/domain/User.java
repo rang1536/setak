@@ -3,7 +3,7 @@ package kr.setak.www.domain;
 public class User {
 	private int userNo;
 	private String userId;
-	private String password;
+	private String gender;
 	private String userEmail;
 	private String userHp;
 	private String userAdd;
@@ -11,8 +11,16 @@ public class User {
 	private int orderCount;
 	private String regDate;
 	private String userGrade;
+	private String token;
 	
 	
+	
+	public String getToken() {
+		return token;
+	}
+	public void setToken(String token) {
+		this.token = token;
+	}
 	public int getUserNo() {
 		return userNo;
 	}
@@ -25,11 +33,12 @@ public class User {
 	public void setUserId(String userId) {
 		this.userId = userId;
 	}
-	public String getPassword() {
-		return password;
+	
+	public String getGender() {
+		return gender;
 	}
-	public void setPassword(String password) {
-		this.password = password;
+	public void setGender(String gender) {
+		this.gender = gender;
 	}
 	public String getUserEmail() {
 		return userEmail;
@@ -75,9 +84,9 @@ public class User {
 	}
 	@Override
 	public String toString() {
-		return "User [userNo=" + userNo + ", userId=" + userId + ", password=" + password + ", userEmail=" + userEmail
+		return "User [userNo=" + userNo + ", userId=" + userId + ", gender=" + gender + ", userEmail=" + userEmail
 				+ ", userHp=" + userHp + ", userAdd=" + userAdd + ", userBirth=" + userBirth + ", orderCount="
-				+ orderCount + ", regDate=" + regDate + ", userGrade=" + userGrade + "]";
+				+ orderCount + ", regDate=" + regDate + ", userGrade=" + userGrade + ", token=" + token + "]";
 	}
 	
 	

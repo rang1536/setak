@@ -40,10 +40,11 @@ public class SetakRestController {
 			map.put("loginUserNo", user.getUserNo());
 			map.put("loginUserId", user.getUserId());
 			map.put("loginUserHp", user.getUserHp());
+			map.put("userGrade", user.userGrade());
 			
 		}*/
 		map.put("result", "success");
-		map.put("loginUserNo", 1);
+		map.put("loginUserNo", 4);
 		map.put("loginUserId", "윤재호");
 		map.put("loginUserHp", "01038390401");
 		return map;
@@ -168,6 +169,28 @@ public class SetakRestController {
 		System.out.println("입력 값  확인 : "+userNo);
 		
 		Map<String, Object> map = setakService.removeStaffServ(userNo);	
+		return map;
+	}
+	
+	//토큰저장하기
+	@RequestMapping(value="/tokenAdd.app", method= {RequestMethod.POST,RequestMethod.GET})
+	public Map<String, Object> tokenAddCtrl(@RequestParam(value="token")String token,
+			@RequestParam(value="userNo")int userNo){
+		System.out.println("토큰  확인 : "+token);
+		System.out.println("유저아이디 확인"+userNo);
+		
+		Map<String, Object> map = setakService.modifyTokenServ(userNo, token);
+		
+		return map;
+	}
+	
+	//회원가입
+	@RequestMapping(value="/join.app", method= {RequestMethod.POST,RequestMethod.GET})
+	public Map<String, Object> joinCtrl(User user){
+		System.out.println("회원가입 값  확인 : "+user);
+		
+		Map<String, Object> map = setakService.addUserServ(user);
+		
 		return map;
 	}
 }
