@@ -47,6 +47,7 @@ public class SetakRestController {
 		map.put("loginUserNo", 4);
 		map.put("loginUserId", "윤재호");
 		map.put("loginUserHp", "01038390401");
+		map.put("userGrade","user");
 		return map;
 	}
 	
