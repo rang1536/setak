@@ -102,6 +102,10 @@ public class SetakService {
 		
 		order.setUserNo(selectUser.getUserNo());
 		
+		//주소 세탁상태등 저장
+		selectUser.setUserAdd(order.getOrderAdd());
+		int updateResult = setakDao.updateSetakState(selectUser);
+		
 		//총가격 세팅
 		int totalPrice = 0;
 		for(int i=0; i<orderedList.size(); i++){
@@ -158,6 +162,20 @@ public class SetakService {
 			sendPush.androidSendPush(staffList.get(i).getToken(), "staff", title, content);
 		}
 		
+		return map;
+	}
+	
+	//웹, 단체푸쉬발송
+	public Map<String, Object> sendPushServ(String sendMsg){
+		Map<String, Object> map = new HashMap<String, Object>();
+		List<User> list = setakDao.selectUserAll();
+		
+		UtilSendPush sendPush = new UtilSendPush();
+		String title = "세탁풍경 알림";
+		for(int i=0; i<list.size(); i++){
+			sendPush.androidSendPush(list.get(i).getToken(), "all", title, sendMsg);
+		}
+		map.put("result", "success");
 		return map;
 	}
 	

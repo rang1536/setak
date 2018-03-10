@@ -323,6 +323,26 @@
 	$(document).ready(function(){
 		numberChange();
 	})
+	
+	//푸쉬보내기
+	function sendPush(){
+		var msg = $('#sendMsg').val();
+		
+		if(confirm('푸쉬알림을 보내시겠습니까?')){
+			$.ajax({
+				url : 'sendPush',
+				data : {'sendMsg':sendMsg},
+				dataType : 'json',
+				type : 'post',
+				success : function(data){
+					if(data.result = 'success'){
+						alert('알림을 발송하였습니다.');
+						window.loccation.reload(true);
+					}
+				}
+			})
+		}
+	}
 	</script>
 </head>
 <body>
@@ -519,13 +539,13 @@
    		<br/>
    		
    		<div>
-   			<textarea style="width:100%;" placeholder="메세지 입력"></textarea>
+   			<textarea style="width:100%;" placeholder="메세지 입력" name="sendMsg" id="sendMsg"></textarea>
    		</div>
    		<div>
     		<table style="width:100%;">
 	    		<tr>
 	    			<td style="width:100%;">
-		    			<button type="button" class="btn btn-block btn-default">알림 보내기</button>
+		    			<button type="button" class="btn btn-block btn-default" onclick="sendPush();">알림 보내기</button>
 		            </td>
 	    			
 	    		</tr>
