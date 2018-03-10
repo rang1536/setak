@@ -107,5 +107,15 @@ public class SetakDao {
 	public List<User> selectSameUserCheck(User user){
 		return sql.selectList("SetakDao.selectLogin", user);
 	}
+	
+	//수거신청시 수거대기로 변경
+	public int updateSetakState(User user){
+		return sql.update("SetakDao.updateSetakState", user);
+	}
+	
+	//모든 유저정보조회
+	public List<User> selectUserAll(){
+		return sql.selectList("SetakDao.selectUserAll");
+	}
 }
 

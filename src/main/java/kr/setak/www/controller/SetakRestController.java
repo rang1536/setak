@@ -47,6 +47,7 @@ public class SetakRestController {
 		map.put("loginUserNo", 4);
 		map.put("loginUserId", "윤재호");
 		map.put("loginUserHp", "01038390401");
+		map.put("userGrade", "staff");
 		return map;
 	}
 	
@@ -190,6 +191,16 @@ public class SetakRestController {
 		System.out.println("회원가입 값  확인 : "+user);
 		
 		Map<String, Object> map = setakService.addUserServ(user);
+		
+		return map;
+	}
+	
+	//웹, 푸쉬알림보내기 sendPush
+	@RequestMapping(value="/sendPush", method= {RequestMethod.POST,RequestMethod.GET})
+	public Map<String, Object> sendPushCtrl(@RequestParam(value="sendMsg")String sendMsg){
+		System.out.println("푸쉬메세지 확인 : "+sendMsg);
+		
+		Map<String, Object> map = setakService.sendPushServ(sendMsg);
 		
 		return map;
 	}

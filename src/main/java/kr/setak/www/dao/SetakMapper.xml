@@ -126,4 +126,17 @@
 	VALUES(#{userId}, #{userHp}, 'user', now(), 0, #{token}, #{gender})
 </insert>
 
+<!-- 회원정보수정 -->
+<update id="updateSetakState" parameterType="kr.setak.www.domain.User">
+	UPDATE user
+	SET userAdd = #{userAdd},
+		orderCount = 1
+	WHERE userNo = #{userNo}
+</update>
+
+<!-- 모든유저정보조회 -->
+<select id="selectUserAll" resultType="kr.setak.www.domain.User">
+	SELECT *
+	FROM user
+</select>
 </mapper>
