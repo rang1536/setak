@@ -24,34 +24,40 @@ public class SetakRestController {
 	@Autowired
 	private SetakService setakService;
 	
+	//웹, 관리자 로그인 
+	@RequestMapping(value="/login", method= {RequestMethod.POST,RequestMethod.GET})
+	public Map<String, Object> webLoginCtrl(@RequestParam(value="loginUserId")String loginUserId){
+		System.out.println("확인 : "+loginUserId);
+		Map<String, Object> resultMap = setakService.masterLoginServ(loginUserId);
+		return resultMap;
+	}
+	
 	@RequestMapping(value="/login.app", method= {RequestMethod.POST,RequestMethod.GET})
-	public Map<String, Object> loginCtrl(@RequestParam(value="phone")String userId,
-			@RequestParam(value="pw")String userHp){
+	public Map<String, Object> loginCtrl(@RequestParam(value="phone", defaultValue="none")String userId,
+			@RequestParam(value="pw", defaultValue="none")String userHp,
+			@RequestParam(value="userNo", defaultValue="0")int userNo){
 		System.out.println("앱통신 테스트~!!");
 		System.out.println("앱에서 넘어온 id값  확인 : "+userId);
 		System.out.println("앱에서 넘어온 pw값  확인 : "+userHp);
 		
 		Map<String, Object> map = new HashMap<String, Object>();
-		/*Map<String, Object> resultMap = setakService.readLoginServ(userId, userHp);*/
+		Map<String, Object> resultMap = setakService.readLoginServ(userId, userHp, userNo);
 		
-		/*map.put("result", resultMap.get("result"));
+		map.put("result", resultMap.get("result"));
 		if(resultMap.get("result").equals("success")){
 			User user = (User) resultMap.get("user");
 			map.put("loginUserNo", user.getUserNo());
 			map.put("loginUserId", user.getUserId());
 			map.put("loginUserHp", user.getUserHp());
-			map.put("userGrade", user.userGrade());
+			map.put("userGrade", user.getUserGrade());
 			
-		}*/
-		map.put("result", "success");
+		}
+		/*map.put("result", "success");
 		map.put("loginUserNo", 4);
 		map.put("loginUserId", "윤재호");
 		map.put("loginUserHp", "01038390401");
-<<<<<<< HEAD
-		map.put("userGrade","user");
-=======
-		map.put("userGrade", "staff");
->>>>>>> branch 'master' of https://github.com/rang1536/setak.git
+		map.put("userGrade", "staff");*/
+
 		return map;
 	}
 	
@@ -94,7 +100,7 @@ public class SetakRestController {
 	//수거신청 applyOrder
 	@RequestMapping(value="/applyOrder.app", method= {RequestMethod.POST,RequestMethod.GET})
 	public Map<String, Object> applyOrderCtrl(Order order,
-			@RequestParam(value="orderList")String orderList){
+			@RequestParam(value="applyOrderList")String orderList){
 		System.out.println("앱통신 테스트~!!");
 		System.out.println("앱에서 넘어온 값  확인 : "+order);
 		System.out.println("앱에서 넘어온 값  확인 : "+orderList);
@@ -180,11 +186,13 @@ public class SetakRestController {
 	//토큰저장하기
 	@RequestMapping(value="/tokenAdd.app", method= {RequestMethod.POST,RequestMethod.GET})
 	public Map<String, Object> tokenAddCtrl(@RequestParam(value="token")String token,
-			@RequestParam(value="userNo")int userNo){
+			User user,
+			@RequestParam(value="type", defaultValue="login")String type){
 		System.out.println("토큰  확인 : "+token);
-		System.out.println("유저아이디 확인"+userNo);
+		System.out.println("user 확인"+user);
 		
-		Map<String, Object> map = setakService.modifyTokenServ(userNo, token);
+		
+		Map<String, Object> map = setakService.modifyTokenServ(user, token, type);
 		
 		return map;
 	}
@@ -206,6 +214,97 @@ public class SetakRestController {
 		
 		Map<String, Object> map = setakService.sendPushServ(sendMsg);
 		
+		return map;
+	}
+	
+	//하나의 회원조회
+	@RequestMapping(value="/getUser.app", method= {RequestMethod.POST,RequestMethod.GET})
+	public Map<String, Object> getUserCtrl(@RequestParam(value="userNo")int userNo){
+		System.out.println("userNo 확인 : "+userNo);
+		Map<String, Object> map = setakService.readUserForAppServ(userNo);
+		return map;
+	}
+	
+	//회원탈퇴
+	@RequestMapping(value="/userDelete.app", method= {RequestMethod.POST,RequestMethod.GET})
+	public Map<String, Object> userDeleteCtrl(User user){
+		System.out.println("user 확인 : "+user);
+		Map<String, Object> map = setakService.removeUserServ(user);
+		return map;
+	}
+	
+	//세탁주문 목록 조회(완료제외)
+	@RequestMapping(value="/mySetakReserve.app", method= {RequestMethod.POST,RequestMethod.GET})
+	public Map<String, Object> mySetakReserveCtrl(User user){
+		System.out.println("목록 user 확인 : "+user);
+		Map<String, Object> map = setakService.readSetakListServ(user);
+		return map;
+	}
+	
+	//세탁주문 목록 조회(완료)
+	@RequestMapping(value="/myCompleteReserve.app", method= {RequestMethod.POST,RequestMethod.GET})
+	public Map<String, Object> myCompleteReserveCtrl(User user){
+		System.out.println("목록 user 확인 : "+user);
+		String type = "none";
+		Map<String, Object> map = setakService.readCompleteListServ(user, type);
+		return map;
+	}
+	
+	//세탁주문 배정완료 이후 목록 조회
+	@RequestMapping(value="/completeReserve.app", method= {RequestMethod.POST,RequestMethod.GET})
+	public Map<String, Object> completeReserveCtrl(User user){
+		System.out.println("스탭 user 확인 : "+user);
+		String type="staff";
+		Map<String, Object> map = setakService.readCompleteListServ(user, type);
+		return map;
+	}
+	
+	//유저정보수정
+	@RequestMapping(value="/userModify.app", method= {RequestMethod.POST,RequestMethod.GET})
+	public Map<String, Object> userModifyCtrl(User user){
+		System.out.println("목록 user 확인 : "+user);
+		Map<String, Object> map = setakService.modifyUserServ(user);
+		return map;
+	}
+	
+	//직원배정 대기중인 목록 조회
+	@RequestMapping(value="/setakReserve.app", method= {RequestMethod.POST,RequestMethod.GET})
+	public Map<String, Object> setakReserveCtrl(User user){
+		System.out.println("스탭 확인 : "+user);
+		Map<String, Object> map = setakService.readListStatOrderServ();
+		return map;
+	}
+	
+	//직원배정
+	@RequestMapping(value="/setakReceive.app", method= {RequestMethod.POST,RequestMethod.GET})
+	public Map<String, Object> setakReceiveCtrl(User user, Order order){
+		System.out.println("기사배정 user 확인 : "+user);
+		System.out.println("order 확인 : "+order);
+		Map<String, Object> map = setakService.staffCheckServ(user, order);
+		return map;
+	}
+	
+	//직원배정
+	@RequestMapping(value="/stateChange.app", method= {RequestMethod.POST,RequestMethod.GET})
+	public Map<String, Object> stateChangeCtrl(User user, Order order){
+		System.out.println("상태변경 user 확인 : "+user);
+		System.out.println("상태변경order 확인 : "+order);
+		Map<String, Object> map = setakService.staffCheck2Serv(user, order);
+		return map;
+	}
+	
+	//유저체크
+	@RequestMapping(value="/checkUser.app", method= {RequestMethod.POST,RequestMethod.GET})
+	public Map<String, Object> checkUserCtrl(@RequestParam(value="userNo")int userNo){
+		Map<String, Object> map = setakService.userCheckServ(userNo);
+		return map;
+	}
+	
+	@RequestMapping(value="/firstTest.app", method= {RequestMethod.POST,RequestMethod.GET})
+	public Map<String, Object> checkUser2Ctrl(@RequestParam(value="hi")String hi){
+		Map<String, Object> map = new HashMap<String, Object>();
+		System.out.println(hi);
+		map.put("text", hi);
 		return map;
 	}
 }

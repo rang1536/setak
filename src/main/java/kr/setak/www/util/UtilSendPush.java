@@ -8,6 +8,7 @@ import java.net.HttpURLConnection;
 import java.net.URL;
 
 
+
 public class UtilSendPush {
 	public void androidSendPush(String token, String activityName, String title, String content){ 
 		/*try { 
@@ -16,7 +17,7 @@ public class UtilSendPush {
 		int LIVE_TIME = 1;    //옙 비활성화 상태일때 FCM가 메시지를 유효화하는 시간 
 		int RETRY = 2;    //메시지 전송실패시 재시도 횟수 
 				 
-		String simpleApiKey = "AIzaSyB0er6AjPNVYE-vdzzsm3v2DWHw7KFH6pQ"; 
+		String simpleApiKey = "AAAAMmJ8IVQ:APA91bHy8nv_ET6kfmKx9Gdw-x53ftHy2uhsuAByY6gHQJVkgchfq9glWzW3BIviqcyP_dADhI_C6mAb4HhwDY7ViVyFeKMn9163pzWWasYRWMU3GNe3odi9sO0h8d1J2pS2fcJkAxPx"; 
 		String gcmURL = "https://android.googleapis.com/fcm/send"; 
 		 
 		 
@@ -35,14 +36,18 @@ public class UtilSendPush {
 			.addData("content",content) 
 			.build(); 
 		Result result = sender.send(message,token,RETRY); 
+		System.out.println("성공 : "+result.getSuccess());
+		System.out.println("에러 : "+result.getErrorCodeName());
+		System.out.println("뭐든 : "+result.getCanonicalRegistrationId());
 		} catch (IOException e) { 
 			// TODO Auto-generated catch block 
 			e.printStackTrace(); 
+			System.out.println(e.getMessage());
 		} */
 		
         /*String token = tokenList.get(count).getDEVICE_ID();*/
         
-        final String apiKey = "AIzaSyB0er6AjPNVYE-vdzzsm3v2DWHw7KFH6pQ";
+        final String apiKey = "AAAAMmJ8IVQ:APA91bHy8nv_ET6kfmKx9Gdw-x53ftHy2uhsuAByY6gHQJVkgchfq9glWzW3BIviqcyP_dADhI_C6mAb4HhwDY7ViVyFeKMn9163pzWWasYRWMU3GNe3odi9sO0h8d1J2pS2fcJkAxPx";
         try{
         	URL url = new URL("https://fcm.googleapis.com/fcm/send");
             HttpURLConnection conn = (HttpURLConnection) url.openConnection();
@@ -59,7 +64,7 @@ public class UtilSendPush {
             /*String input = "{\"notification\" : {\"title\" : \"여기다 제목 넣기 \", \"body\" : \"여기다 내용 넣기\"}, \"to\":\"/topics/ALL\"}";*/
            
             // 이걸로 보내면 특정 토큰을 가지고있는 어플에만 알림을 날려준다  위에 둘중에 한개 골라서 날려주자
-            String input = "{\"notification\" : {\"title\" : \""+ title +"\", \"body\" : \""+content+"\"}, \"to\":\""+token+" \"}";
+            String input = "{\"notification\" : {\"title\" : \""+ title +"\", \"body\" : \""+content+"\"}, \"to\":\""+token+"\", \"click_action\":\"android.intent.action.MAIN\" }";
 
             OutputStream os = conn.getOutputStream();
             

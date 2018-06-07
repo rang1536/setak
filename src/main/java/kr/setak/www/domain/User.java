@@ -12,9 +12,29 @@ public class User {
 	private String regDate;
 	private String userGrade;
 	private String token;
+	private String sangseAdd;
+	private long kakaoId;
+	private long facebookId;
 	
 	
-	
+	public long getKakaoId() {
+		return kakaoId;
+	}
+	public void setKakaoId(long kakaoId) {
+		this.kakaoId = kakaoId;
+	}
+	public long getFacebookId() {
+		return facebookId;
+	}
+	public void setFacebookId(long facebookId) {
+		this.facebookId = facebookId;
+	}
+	public String getSangseAdd() {
+		return sangseAdd;
+	}
+	public void setSangseAdd(String sangseAdd) {
+		this.sangseAdd = sangseAdd;
+	}
 	public String getToken() {
 		return token;
 	}
@@ -86,7 +106,8 @@ public class User {
 	public String toString() {
 		return "User [userNo=" + userNo + ", userId=" + userId + ", gender=" + gender + ", userEmail=" + userEmail
 				+ ", userHp=" + userHp + ", userAdd=" + userAdd + ", userBirth=" + userBirth + ", orderCount="
-				+ orderCount + ", regDate=" + regDate + ", userGrade=" + userGrade + ", token=" + token + "]";
+				+ orderCount + ", regDate=" + regDate + ", userGrade=" + userGrade + ", token=" + token + ", sangseAdd="
+				+ sangseAdd + ", kakaoId=" + kakaoId + ", facebookId=" + facebookId + "]";
 	}
 	
 	

@@ -1,5 +1,7 @@
 package kr.setak.www.domain;
 
+import java.util.List;
+
 public class Order {
 	private int orderNo; //pk
 	private String inDate; //수거일 
@@ -16,8 +18,43 @@ public class Order {
 	private String userId;
 	private int userNo;
 	private String comment;
+	private List<OrderedItem> orderList;
+	private int receiveUserNo; //수거인
+	private int deliveryUserNo; //배송인
+	private String staffName;
+	private String staffHp;
 	
 	
+	public String getStaffName() {
+		return staffName;
+	}
+	public void setStaffName(String staffName) {
+		this.staffName = staffName;
+	}
+	public String getStaffHp() {
+		return staffHp;
+	}
+	public void setStaffHp(String staffHp) {
+		this.staffHp = staffHp;
+	}
+	public int getReceiveUserNo() {
+		return receiveUserNo;
+	}
+	public void setReceiveUserNo(int receiveUserNo) {
+		this.receiveUserNo = receiveUserNo;
+	}
+	public int getDeliveryUserNo() {
+		return deliveryUserNo;
+	}
+	public void setDeliveryUserNo(int deliveryUserNo) {
+		this.deliveryUserNo = deliveryUserNo;
+	}
+	public List<OrderedItem> getOrderList() {
+		return orderList;
+	}
+	public void setOrderList(List<OrderedItem> orderList) {
+		this.orderList = orderList;
+	}
 	public String getComment() {
 		return comment;
 	}
@@ -114,7 +151,8 @@ public class Order {
 				+ ", totalPrice=" + totalPrice + ", userHp=" + userHp + ", orderAdd=" + orderAdd + ", deliveryAdd="
 				+ deliveryAdd + ", hopeCollectionDate=" + hopeCollectionDate + ", hopeDeliveryDate=" + hopeDeliveryDate
 				+ ", sameAddCheck=" + sameAddCheck + ", sangseAdd=" + sangseAdd + ", userId=" + userId + ", userNo="
-				+ userNo + ", comment=" + comment + "]";
+				+ userNo + ", comment=" + comment + ", orderList=" + orderList + ", receiveUserNo=" + receiveUserNo
+				+ ", deliveryUserNo=" + deliveryUserNo + ", staffName=" + staffName + ", staffHp=" + staffHp + "]";
 	}
 	
 }

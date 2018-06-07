@@ -32,14 +32,46 @@ public class SetakService {
 		return setakDao.selectUserInfo(userId);
 	}
 	
+	//마스터로그인
+	public Map<String, Object> masterLoginServ(String loginUserId){
+		Map<String, Object> map = new HashMap<String, Object>();
+		User user = new User();
+		user.setUserHp(loginUserId);
+		user.setUserGrade("master");
+		
+		List<User> list = setakDao.selectMasterLogin(user);
+		System.out.println("리스트확인 : "+list);
+		if(list.size() == 1) {
+			map.put("result", "login");
+			System.out.println("로그인");
+		}else if(list.size() == 0) {
+			map.put("result", "noData");
+			System.out.println("데이터없음");
+		}else if(list.size() > 1) {
+			map.put("result", "manyData");
+			System.out.println("너무많음");
+		}
+		return map;
+	}
+	
+	
 	//로그인
-	public Map<String, Object> readLoginServ(String userId, String userHp){
+	public Map<String, Object> readLoginServ(String userId, String userHp, int userNo){
 		Map<String, Object> map = new HashMap<String, Object>();
 		User user = new User();
 		user.setUserId(userId);
 		user.setUserHp(userHp);
 		
-		User loginUser = setakDao.selectLogin(user);
+		System.out.println("세팅값 확인 : "+user);
+		User loginUser = new User();
+		if(userNo == 0) {
+			loginUser = setakDao.selectLogin(user);
+		}else if(userNo != 0) {
+			loginUser = setakDao.selectLogin2(userNo);
+		}
+		
+		System.out.println("loginUser 확인 : "+loginUser);
+		
 		if(loginUser == null){
 			user= new User();
 			user.setUserId(userId);
@@ -52,6 +84,7 @@ public class SetakService {
 				map.put("result", "noPw"); //이름으로 조회된 회원이 있으면 비번(휴대폰번호) 불일치
 			}
 		}else{
+			System.out.println("로그인성공");
 			map.put("result", "success");
 			map.put("user", loginUser);
 		}
@@ -94,16 +127,15 @@ public class SetakService {
 		}
 		/*System.out.println("배열확인 : "+orderedList);*/
 		
-		//유저pk조회
-		User user = new User();
-		user.setUserId(order.getUserId());
-		user.setUserHp(order.getUserHp().replaceAll("-", ""));
-		User selectUser = setakDao.selectLogin(user);
+		//유저 조회
+		User selectUser = setakDao.selectUserForApp(order.getUserNo());
+		System.out.println("selectUser확인 : "+selectUser);
 		
-		order.setUserNo(selectUser.getUserNo());
-		
-		//주소 세탁상태등 저장
-		selectUser.setUserAdd(order.getOrderAdd());
+		//주소, 세탁상태등 저장
+		selectUser.setUserAdd(order.getOrderAdd()); //주소세팅
+		selectUser.setSangseAdd(order.getSangseAdd());
+		selectUser.setUserHp(order.getUserHp());
+		selectUser.setOrderCount(selectUser.getOrderCount()+1);
 		int updateResult = setakDao.updateSetakState(selectUser);
 		
 		//총가격 세팅
@@ -116,7 +148,7 @@ public class SetakService {
 		
 		//주문등록
 		Map<String, Object> map = new HashMap<String, Object>();
-		String userProduct = null;
+		String userProduct = "";
 		int successCount = 0;
 		int result = setakDao.insertApplyOrder(order);
 		if(result == 1){ //주문등록성공
@@ -143,9 +175,10 @@ public class SetakService {
 		//푸쉬알림 - 고객
 		UtilSendPush sendPush = new UtilSendPush();
 		String userTitle = "세탁풍경 수거신청완료";
-		String userContent = "수거신청이 완료되었습니다. 담당자 확인 후 요청하신 주소로 수거 하러 가겠습니다. 감사합니다";
+		String userContent = "수거신청이 완료되었습니다. \n 수거하실 기사님을 배정중입니다.\n 감사합니다";
 		sendPush.androidSendPush(selectUser.getToken(), "applyList", userTitle, userContent);
 		
+		order = setakDao.selectOrderByOrderNo(order.getOrderNo());
 		//푸쉬알림 - 관리자
 		List<User> staffList = setakDao.selectStaffNAdmin();
 		String userName = selectUser.getUserId();
@@ -153,7 +186,7 @@ public class SetakService {
 		String applyDate = order.getInDate();
 		String address = order.getDeliveryAdd();
 		
-		String title = "[세탁물 수거신청]" + userName +"("+userPhone+")님 신청";
+		String title = "세탁물 수거신청\n" + userName +"("+userPhone+")님 신청";
 		String content = "신청일-"+applyDate+"\n";
 		content += "세탁물-"+userProduct +"\n";
 		content += "주소-"+address;
@@ -173,6 +206,7 @@ public class SetakService {
 		UtilSendPush sendPush = new UtilSendPush();
 		String title = "세탁풍경 알림";
 		for(int i=0; i<list.size(); i++){
+			System.out.println(i+"번째 발송 토큰확인 : "+list.get(i).getToken());
 			sendPush.androidSendPush(list.get(i).getToken(), "all", title, sendMsg);
 		}
 		map.put("result", "success");
@@ -261,17 +295,63 @@ public class SetakService {
 	}
 	
 	//토큰 저장
-	public Map<String, Object> modifyTokenServ(int userNo, String token){
-		User user = new User();
-		user.setToken(token);
-		user.setUserNo(userNo);
-		
+	public Map<String, Object> modifyTokenServ(User user, String token, String type){
 		Map<String, Object> map = new HashMap<String, Object>();
-		int result = setakDao.updateUserToken(user);
-		if(result == 1) {
-			map.put("result", "success");
+		if(type.equals("faceBook")) {
+			if(user.getGender().equals("male")) {
+				user.setGender("M");
+			}else {
+				user.setGender("F");
+			}
+			
+		}
+		int result = 0;
+		int count = 0;
+		if(type.equals("faceBook")) {
+			count = setakDao.selectUserByToken(user);
+		}else if(type.equals("kakao")) {
+			count = setakDao.selectUserByToken(user);
 		}else {
+			count = setakDao.selectUserByToken(user);
+		}
+		
+		User loginUser = new User();
+		if(count == 0) { //신규기기 인서트
+			result = setakDao.insertUserToken(user);
+			System.out.println("토큰 등록완료~!!");
+		}else if(count > 0){ //기존기기
+			if(type.equals("login")) {
+				result = setakDao.updateUserToken(user);
+				System.out.println("토큰 수정완료1~!!");
+			}else {
+				result = setakDao.updateUserTokenBySns(user);
+				System.out.println("토큰 수정완료2~!!");
+				loginUser = setakDao.selectUserBySnsId(user);
+			}							
+		}
+		
+		if(result == 1 && count == 0) {
+			map.put("result", "newUser");
+			map.put("userNo", user.getUserNo());
+			map.put("userId", user.getUserId());
+			map.put("userGrade", "user");
+			System.out.println("신규유저~!!");
+			
+			//푸쉬알림 - 고객
+			/*UtilSendPush sendPush = new UtilSendPush();
+			String userTitle = "세탁풍경";
+			String userContent = "세탁풍경의 가족이 되신걸 환영합니다.";
+			sendPush.androidSendPush(user.getToken(), "main", userTitle, userContent);*/
+			
+		}else if(result == 1 && count > 0){
+			map.put("result", "success");
+			map.put("userNo", loginUser.getUserNo());
+			map.put("userId", loginUser.getUserId());
+			map.put("userGrade", "user");
+			System.out.println("기존유저~!!");
+		}else if(result == 0){
 			map.put("result", "fail");
+			System.out.println("수정실패??~!!");
 		}
 		return map;
 	}
@@ -293,21 +373,228 @@ public class SetakService {
 				map.put("result", "success");
 				map.put("userNo", user.getUserNo());
 				map.put("userId", user.getUserId());
-				map.put("userHp", user.getUserHp());
+				map.put("userHp", user.getUserHp().replaceAll("-", ""));
 				map.put("userGrade", "user");
 				
 				//푸쉬알림 - 고객
-				/*UtilSendPush sendPush = new UtilSendPush();
-				String userTitle = "세탁풍경 회원가입완료";
+				UtilSendPush sendPush = new UtilSendPush();
+				String userTitle = "세탁풍경";
 				String userContent = "세탁풍경의 가족이 되신걸 환영합니다.";
-				sendPush.androidSendPush(user.getToken(), "main", userTitle, userContent);*/
+				sendPush.androidSendPush(user.getToken(), "main", userTitle, userContent);
 			}else{
 				map.put("result", "fail");
 			}
 		}
+		return map;
+	}
+	
+	//하나의 회원조회
+	public Map<String, Object> readUserForAppServ(int userNo){
+		User user = setakDao.selectUserForApp(userNo);
 		
-		
+		Map<String, Object> map = new HashMap<String, Object>();
+		if(user.getUserAdd() == null) user.setUserAdd("none");
+		map.put("user", user);
 		
 		return map;
+	}
+	
+	//회원탈퇴
+	public Map<String, Object> removeUserServ(User user){
+		int result = setakDao.deleteUser(user);
+		
+		Map<String, Object> map = new HashMap<String, Object>();
+		if(result == 1) map.put("result", "success");
+		else map.put("result", "fail");
+		
+		return map;
+	}
+	
+	//세탁주문조회 (완료아님)
+	public Map<String, Object> readSetakListServ(User user){
+		List<Order> list = setakDao.selectOrderList(user.getUserNo());
+		Map<String, Object> map = new HashMap<String, Object>();
+		
+		if(list != null) {
+			for(int i=0; i<list.size(); i++) {
+				List<OrderedItem> orderList = setakDao.selectOrderedItemAll(list.get(i).getOrderNo());
+				list.get(i).setOrderList(orderList);
+			}
+		}
+		
+		System.out.println("세탁물 조회결과 최종확인 :"+list);
+		map.put("list", list);
+		return map;
+	}
+	
+	//세탁주문조회 (완료)
+	public Map<String, Object> readCompleteListServ(User user, String type){
+		Map<String, Object> map = new HashMap<String, Object>();
+		
+		List<Order> list = new ArrayList<Order>();
+		if(type.equals("none")) {
+			list = setakDao.selectCompleteList(user.getUserNo());								
+		}else if(type.equals("staff")) {
+			list = setakDao.selectListByStaffNo(user.getUserNo());					
+		}
+		
+		
+		if(list != null) {
+			for(int i=0; i<list.size(); i++) {
+				List<OrderedItem> orderList = setakDao.selectOrderedItemAll(list.get(i).getOrderNo());
+				list.get(i).setOrderList(orderList);
+				list.get(i).setUserHp(setakDao.selectHpForApp(list.get(i).getUserNo()));
+			}
+		}
+		map.put("list", list);
+		return map;
+	}
+	
+	//회원정보수정
+	public Map<String, Object> modifyUserServ(User user){
+		Map<String, Object> map= new HashMap<String, Object>();
+		//기존데이터 중에 같은 핸드폰번호 존재하는지 확인
+		List<User> list = setakDao.selectUserByHp(user.getUserHp());
+		if(list.size() >= 1) {
+			for(int i=0; i<list.size();i++) {
+				if(list.get(0).getUserNo() != user.getUserNo()) {
+					map.put("result", "exist");
+				}
+			}			
+		}
+		
+		int result = setakDao.updateUserInfoByApp(user);
+		
+		if(result == 1) map.put("result", "success");
+		else if(result == 0) map.put("result", "fail");
+		return map;
+	}
+	
+	//배정대기중 목록 조회
+	public Map<String, Object> readListStatOrderServ(){
+		Map<String, Object> map= new HashMap<String, Object>();
+		List<Order> list = setakDao.selectOrderByStateStay();
+		
+		System.out.println("수거대기 목록확인 : "+list);
+		if(list != null) {
+			for(int i=0; i<list.size(); i++) {
+				List<OrderedItem> orderList = setakDao.selectOrderedItemAll(list.get(i).getOrderNo());
+				list.get(i).setOrderList(orderList);
+			}
+		}
+		map.put("list", list);
+		return map;
+	}
+	
+	//수거기사배정
+	public Map<String, Object> staffCheckServ(User user, Order order){
+		Map<String, Object> map= new HashMap<String, Object>();
+		//먼저 배정기사 있는지 확인
+		Order orderCheck = setakDao.selectOrderByOrderNo(order.getOrderNo());
+		if(!orderCheck.getState().equals("1")) { //대기상태가 아닐때
+			/*if(orderCheck.getState().equals("2")) {
+				order.setReceiveUserNo(user.getUserNo());
+				order.setState("3");
+			}*/
+			map.put("result", "exist");
+		}else { //대기상태일때
+			order.setReceiveUserNo(user.getUserNo());
+			order.setState("2");
+			
+			//수거 스탭 선택 후 주문 상태변경 하기
+			int result = setakDao.updateOrderStaffCheck(order);
+			
+			//기사배정 푸쉬보내기
+			if(result == 1) {
+				User userInfo = setakDao.selectUserForApp(orderCheck.getUserNo());
+				User staff = setakDao.selectStaff(user.getUserNo());
+				//푸쉬알림 - 고객
+				UtilSendPush sendPush = new UtilSendPush();
+				String userTitle = "세탁풍경 알림";
+				String userContent = "수거하실 기사님("+staff.getUserId()+"-"+staff.getUserHp()+")이 배정되었습니다.";
+				sendPush.androidSendPush(userInfo.getToken(), "applyList", userTitle, userContent);
+				
+				//푸쉬알림 - 관리자
+				List<User> staffList = setakDao.selectStaffNAdmin();
+				
+				String title = "세탁물 수거신청 배정완료 알림";
+				String content = staff.getUserId()+"님으로  수거배정이 완료되었습니다 \n";
+				content += "고객이름 - "+userInfo.getUserId()+"\n";
+				content += "휴대폰 - "+userInfo.getUserHp();
+				
+				for(int i=0; i<staffList.size(); i++){
+					sendPush.androidSendPush(staffList.get(i).getToken(), "staff", title, content);
+				}
+				map.put("result", "success");
+			}else {
+				map.put("result", "fail");
+			}
+		}
+		
+		return map;
+	}
+	
+	//세탁물 상태변경
+	public Map<String, Object> staffCheck2Serv(User user, Order order){
+		Map<String, Object> map= new HashMap<String, Object>();
+		//먼저 주문상태 확인
+		Order orderCheck = setakDao.selectOrderByOrderNo(order.getOrderNo());
+		orderCheck.setState(String.valueOf(Integer.parseInt(orderCheck.getState())+1));
+		
+		int result = setakDao.updateOrderStaffCheck(orderCheck);
+		
+		if(result == 1) {
+			User userInfo = setakDao.selectUserForApp(orderCheck.getUserNo());
+			//푸쉬알림 - 고객
+			UtilSendPush sendPush = new UtilSendPush();
+			String userTitle = "세탁풍경 알림";
+			String userContent = "";
+			if(Integer.parseInt(orderCheck.getState()) == 3) {
+				userContent = "수거된 세탁물을 세탁을 시작합니다";
+			}else if(Integer.parseInt(orderCheck.getState()) == 4) {
+				userContent = "세탁이 완료되었습니다.";
+			}
+			
+			sendPush.androidSendPush(userInfo.getToken(), "applyList", userTitle, userContent);
+			
+			map.put("result", "success");
+		}else {
+			map.put("result", "fail");
+		}
+		
+		return map;
+	}
+	
+	//유저체크
+	public Map<String, Object> userCheckServ(int userNo){
+		Map<String, Object> map= new HashMap<String, Object>();
+		int count = setakDao.selectUserCntByCheck(userNo);
+		
+		if(count == 0) {
+			map.put("result", "none");
+		}else {
+			map.put("result", "exist");
+		}
+		return map;
+	}
+	
+	//모든세탁물 조회
+	public List<Order> readAllOrderServ(){
+		List<Order> list = setakDao.selectAllOrder();
+		if(list != null) {
+			for(int i=0; i<list.size(); i++) {
+				list.get(i).setOrderList(setakDao.selectOrderedItemAll(list.get(i).getOrderNo())); //신청물품
+				User user = new User();
+				user = setakDao.selectUserForApp(list.get(i).getUserNo());
+				if(user != null) {
+					list.get(i).setUserId(user.getUserId());
+					list.get(i).setUserHp(user.getUserHp());
+				}
+				System.out.println(i+" 번째 리스트확인 : "+list.get(i));
+			}
+		}
+		
+		
+		return list;
 	}
 }

@@ -40,6 +40,40 @@
 	</style>
 	
 	<script>
+	
+	var localUserId = '';
+    if(localStorage.getItem("userId") == null){
+    	/* makeCookie(localUserId); */
+		window.location.href = "#page5";
+	}else{
+		localUserId = localStorage.getItem("userId");
+		/* makeCookie(localUserId); */
+	}
+    
+    function login(){
+    	var loginUserId = $('#loginUserId').val();
+    	/* console.log(loginUserId); */
+    	if(loginUserId == null || loginUserId ==''){
+    		alert('관리자 휴대폰 번호를 입력하세요');
+    	}else{
+    		$.ajax({
+    			url : 'login',
+    			data : {'loginUserId':loginUserId},
+    			type : 'post',
+    			dataType : 'json',
+    			success : function(data){
+    				/* console.log(data); */
+    				if(data.result == 'login'){
+    					localStorage.setItem('userId',data.result);
+    					window.location.href = "#page1";
+    				}else{
+    					alert('관리자 정보를 다시 확인해주세요');
+    				}
+    			}
+    		})
+    	} 	 	
+    }
+    
 	//세탁물입력폼 열기
 	function addSetakItemForm(){
 		$('#listSetakItemDiv').css('display','none');
@@ -75,7 +109,7 @@
 					alert('등록되었습니다~!!');
 					window.location.reload(true);
 				}else{
-					alert('등록실패~!! 010-3839-0401로 전화주세요');
+					alert('등록실패~!! 010-9747-0740(코리아웹센터)로 전화주세요');
 					window.location.reload(true);
 				}
 			}
@@ -84,6 +118,7 @@
 	
 	//세탁물수정
 	function modifyItem(no){
+		console.log(no);
 		$.ajax({
 			url : 'readItemInfo',
 			data : {'no':no},
@@ -94,10 +129,10 @@
 				html += '<table id="modifyItemTb" style="width:90%;font-size:17px;">';
 				html += '<tr>';
 				html += '<th style="width:35%;">물품명</th>';
-				html += '<td><input type="text" name="name" id="name" value="'+data.name+'"/></td>';
+				html += '<td><input type="hidden" name="no" id="no" value="'+data.no+'"/><input type="text" name="name" id="name" value="'+data.name+'"/></td>';
 				html += '</tr><tr>';
 				html += '<th><br/>가격</th>';
-				html += '<td><br/><input type="number" name="price" id="price" value="'+data.price+'"/></td>';
+				html += '<td><br/><input type="number" name="price" id="price" value="'+data.price+'" placeholder="숫자만입력"/></td>';
 				html += '</tr><tr>';
 				/* html += '<td colspan="2">';
 				html += '<button type="button" class="btn btn-labeled btn-success" style="font-weight:bold;" onclick="addSetakItem()">물품등록</button>';
@@ -120,13 +155,14 @@
 	    		eKey: true, //Enter Keypress
 	    		addClass: 'btn-light-green', //Button Classes (btn-large | btn-small | btn-green | btn-light-green | btn-purple | btn-orange | btn-pink | btn-turquoise | btn-blue | btn-light-blue | btn-light-red | btn-red | btn-yellow | btn-white | btn-black | btn-rounded | btn-circle | btn-square | btn-disabled)
 	    		onClick: function(dialog) {
+	    			var no = $('#modifyItemTb').find('#no').val();
 	    			var name = $('#modifyItemTb').find('#name').val();
 	    			var price = $('#modifyItemTb').find('#price').val();
 	    			
 	    			if(confirm('정말 수정하시겠습니까?')){
 	    				$.ajax({
 		    				url : 'modifySetakItem',
-		    				data : {'name':name, 'price':price},
+		    				data : {'no':no, 'name':name, 'price':price},
 		    				dataType : 'json',
 		    				type : 'post',
 		    				success:function(data){
@@ -134,7 +170,7 @@
 		    						alert('수정되었습니다~!!');
 		    						window.location.reload(true);
 		    					}else{
-		    						alert('수정실패~!! 010-3839-0401로 전화주세요');
+		    						alert('수정실패~!! 010-9747-0740(코리아웹센터)로 전화주세요');
 		    						window.location.reload(true);
 		    					}
 		    				}
@@ -168,7 +204,7 @@
 						alert('삭제되었습니다~!!');
 						window.location.reload(true);
 					}else{
-						alert('삭제실패~!! 010-3839-0401로 전화주세요');
+						alert('삭제실패~!! 010-9747-0740(코리아웹센터)로 전화주세요');
 						window.location.reload(true);
 					}
 				}
@@ -194,10 +230,10 @@
 		var userHp = $(addStaffDiv).find('#userHp').val();
 		
 		if(userId == null || userId == ''){
-			alert('스탭의 이름을 입력하세요!');
+			alert('체인점 이름을 입력하세요!');
 			return;
 		}else if(userHp == null || userHp == ''){
-			alert('스탭의 휴대폰번호를 입력하세요!');
+			alert('체인점 휴대폰번호를 입력하세요!');
 			return;
 		}
 		
@@ -211,7 +247,7 @@
 					alert('등록되었습니다~!!');
 					window.location.reload(true);
 				}else{
-					alert('등록실패~!! 010-3839-0401로 전화주세요');
+					alert('등록실패~!! 010-9747-0740(코리아웹센터)로 전화주세요');
 					window.location.reload(true);
 				}
 			}
@@ -229,7 +265,7 @@
 				var html = '';
 				html += '<table id="modifyStaffTb" style="width:90%;font-size:17px;">';
 				html += '<tr>';
-				html += '<th style="width:35%;">스탭 이름</th>';
+				html += '<th style="width:35%;">체인점 이름</th>';
 				html += '<td><input type="text" name="userId" id="userId" value="'+data.userId+'"/>';
 				html += '<input type="hidden" name="userNo" id="userNo" value="'+data.userNo+'"/></td>';
 				html += '</tr><tr>';
@@ -249,7 +285,7 @@
 	function modifyStaffPopUp(txt){
 	    modal({
 	        type: 'info',
-	        title: '스탭 정보수정',
+	        title: '체인점 정보수정',
 	        text: txt,
 	        buttons: [{
 	    		text: '수정', //Button Text
@@ -271,7 +307,7 @@
 	    						alert('수정되었습니다~!!');
 	    						window.location.reload(true);
 	    					}else{
-	    						alert('수정실패~!! 010-3839-0401로 전화주세요');
+	    						alert('수정실패~!! 010-9747-0740(코리아웹센터)로 전화주세요');
 	    						window.location.reload(true);
 	    					}
 	    				}
@@ -295,7 +331,7 @@
 	function removeStaff(userNo){
 		if(confirm('정말로 삭제하시겠습니까?')){
 			$.ajax({
-				url : 'removeSetakItem',
+				url : 'removeStaff',
 				data : {'userNo':userNo},
 				dataType : 'json',
 				type : 'post',
@@ -304,7 +340,7 @@
 						alert('삭제되었습니다~!!');
 						window.location.reload(true);
 					}else{
-						alert('삭제실패~!! 010-3839-0401로 전화주세요');
+						alert('삭제실패~!! 010-9747-0740(코리아웹센터)로 전화주세요');
 						window.location.reload(true);
 					}
 				}
@@ -331,16 +367,52 @@
 		if(confirm('푸쉬알림을 보내시겠습니까?')){
 			$.ajax({
 				url : 'sendPush',
-				data : {'sendMsg':sendMsg},
+				data : {'sendMsg':msg},
 				dataType : 'json',
 				type : 'post',
 				success : function(data){
 					if(data.result = 'success'){
 						alert('알림을 발송하였습니다.');
-						window.loccation.reload(true);
+						window.location.reload(true);
 					}
 				}
 			})
+		}
+	}
+	
+	//주문현황보기
+	function orderListShow(){
+		$('#orderCompleteDiv').css('display','none');
+		$('#listOrderDiv').slideDown();
+	}
+	
+	function orderCompleteShow(){
+		$('#listOrderDiv').css('display','none');
+		$('#orderCompleteDiv').slideDown();
+	}
+	
+	//상세내용 열고닫기
+	function openNClose(index){
+		var tag = 'tr'+index;
+		var val = $('#'+tag).find('#openChk').val();
+		if(val == '1'){
+			$('#'+tag).slideDown();
+			$('#'+tag).find('#openChk').val('2');
+		}else{
+			$('#'+tag).slideUp();
+			$('#'+tag).find('#openChk').val('1');
+		}
+	}
+	
+	function openNClose2(index){
+		var tag = '2tr'+index;
+		var val = $('#'+tag).find('#openChk').val();
+		if(val == '1'){
+			$('#'+tag).slideDown();
+			$('#'+tag).find('#openChk').val('2');
+		}else{
+			$('#'+tag).slideUp();
+			$('#'+tag).find('#openChk').val('1');
 		}
 	}
 	</script>
@@ -353,9 +425,10 @@
     	<!-- <a class="ui-btn-right" href="#page9" data-icon="gear" style="background-color:rgba(255,255,255,0.5);margin-top:15px;"><font style="font-weight:bold;color:red;">MY</font></a> -->
     	<div data-role="navbar">
             <ul>
-                <li><a href="#" class="ui-btn-active ui-state-persist"><font style="font-size:16px;">상품관리</font></a></li>
-                <li><a href="#page2" data-transition="none"><font style="font-size:16px;">스탭관리</font></a></li>
-                <li><a href="#page3" data-transition="none"><font style="font-size:16px;">프로모션</font></a></li>
+                <li><a href="#" class="ui-btn-active ui-state-persist"><font style="font-size:16px;">상품</font></a></li>
+                <li><a href="#page2" data-transition="none"><font style="font-size:16px;">체인점</font></a></li>
+                <li><a href="#page3" data-transition="none"><font style="font-size:16px;">세탁물</font></a></li>
+                <li><a href="#page4" data-transition="none"><font style="font-size:16px;">프로모션</font></a></li>
                 
             </ul>
         </div><!-- /navbar -->
@@ -425,7 +498,7 @@
     
     <!-- 푸터  -->
     <div style="overflow: hidden;" data-role="footer" data-tap-toggle="false" data-position="fixed" onclick="footerBanner();">
-	   <img src="resources/img/jbFoot.png" style="width:100%;height:65px;margin-left:0px;"/>
+	   <img src="resources/img/foot.png" style="width:100%;height:65px;margin-left:0px;"/>
 	</div>
 </section> 
 
@@ -436,9 +509,10 @@
     	<!-- <a class="ui-btn-right" href="#page9" data-icon="gear" style="background-color:rgba(255,255,255,0.5);margin-top:15px;"><font style="font-weight:bold;color:red;">MY</font></a> -->
     	<div data-role="navbar">
             <ul>
-                <li><a href="#page1" data-transition="none"><font style="font-size:16px;">상품관리</font></a></li>
-                <li><a href="#" class="ui-btn-active ui-state-persist"><font style="font-size:16px;">스탭관리</font></a></li>
-                <li><a href="#page3" data-transition="none"><font style="font-size:16px;">프로모션</font></a></li>
+                <li><a href="#page1" data-transition="none"><font style="font-size:16px;">상품</font></a></li>
+                <li><a href="#" class="ui-btn-active ui-state-persist"><font style="font-size:16px;">체인점</font></a></li>
+                <li><a href="#page3" data-transition="none"><font style="font-size:16px;">세탁물</font></a></li>
+                <li><a href="#page4" data-transition="none"><font style="font-size:16px;">프로모션</font></a></li>
                 
             </ul>
         </div><!-- /navbar -->
@@ -450,13 +524,13 @@
     			<td style="width:50%;">
 	    			<a class="btn btn-info btn-labeled" href="#" role="button" style="width:99%;" onclick="addStaffForm();">
 		                <span class="btn-label">
-		                <i class="glyphicon glyphicon-info-sign"></i></span>스탭등록
+		                <i class="glyphicon glyphicon-info-sign"></i></span>체인점등록
 		            </a>
 	            </td>
     			<td style="width:50%;">
     				<a class="btn btn-warning btn-labeled" href="#" role="button" style="width:99%;" onclick="closeThisForm();">
                 		<span class="btn-label">
-                		<i class="glyphicon glyphicon-bookmark"></i></span>스탭목록
+                		<i class="glyphicon glyphicon-bookmark"></i></span>체인점목록
             		</a>
             	</td>
     		</tr>
@@ -478,13 +552,13 @@
     			</tr>
     			<tr>
     				<td colspan="2">
-    					<button type="button" class="btn btn-block btn-default" style="font-weight:bold;" onclick="addStaff()">스탭등록</button>
+    					<button type="button" class="btn btn-block btn-default" style="font-weight:bold;" onclick="addStaff()">체인점등록</button>
             		</td>
     			</tr>
     		</table>
     	</div>
     	<div style="width:100%;font-size:17px;" id="listStaffDiv">
-    		<p style="width:100%;background-color:#CC3D3D;color:white;text-align:center;border-radius:5px;">스탭목록</p>
+    		<p style="width:100%;background-color:#CC3D3D;color:white;text-align:center;border-radius:5px;">체인점목록</p>
     		<table style="width:100%;">
     			<tr>
     				<th>이름</th>
@@ -508,10 +582,9 @@
     
     <!-- 푸터  -->
     <div style="overflow: hidden;" data-role="footer" data-tap-toggle="false" data-position="fixed" onclick="footerBanner();">
-	   <img src="resources/img/jbFoot.png" style="width:100%;height:65px;margin-left:0px;"/>
+	   <img src="resources/img/foot.png" style="width:100%;height:65px;margin-left:0px;"/>
 	</div>
 </section> 
-
 
 <section id="page3" data-role="page">
     <header data-role="header" data-tap-toggle="false" data-position="fixed" style="background-color:#F6F6F6;">
@@ -519,8 +592,140 @@
     	<!-- <a class="ui-btn-right" href="#page9" data-icon="gear" style="background-color:rgba(255,255,255,0.5);margin-top:15px;"><font style="font-weight:bold;color:red;">MY</font></a> -->
     	<div data-role="navbar">
             <ul>
-                <li><a href="#page1" data-transition="none"><font style="font-size:16px;">상품관리</font></a></li>
-                <li><a href="#page2" data-transition="none"><font style="font-size:16px;">스탭관리</font></a></li>
+                <li><a href="#page1" data-transition="none"><font style="font-size:16px;">상품</font></a></li>
+                <li><a href="#page2" data-transition="none"><font style="font-size:16px;">체인점</font></a></li>
+                <li><a href="#" class="ui-btn-active ui-state-persist"><font style="font-size:16px;">세탁물</font></a></li>
+                <li><a href="#page4" data-transition="none"><font style="font-size:16px;">프로모션</font></a></li>
+                
+            </ul>
+        </div><!-- /navbar -->
+    </header>
+
+	<div class="content" data-role="content">
+		<table style="width:100%;">
+    		<tr>
+    			<td style="width:50%;">
+	    			<a class="btn btn-info btn-labeled" href="#" role="button" style="width:99%;" onclick="orderListShow();">
+		                <span class="btn-label">
+		                <i class="glyphicon glyphicon-info-sign"></i></span>세탁진행
+		            </a>
+	            </td>
+    			<td style="width:50%;">
+    				<a class="btn btn-warning btn-labeled" href="#" role="button" style="width:99%;" onclick="orderCompleteShow();">
+                		<span class="btn-label">
+                		<i class="glyphicon glyphicon-bookmark"></i></span>세탁완료 
+            		</a>
+            	</td>
+    		</tr>
+    	</table>
+    	
+    	<div style="width:100%;font-size:17px;" id="listOrderDiv">
+    		<p style="width:100%;background-color:#CC3D3D;color:white;text-align:center;border-radius:5px;">진행중목록</p>
+    		<table style="width:100%;">
+    			<tr>
+    				<th style="font-weight:bold;text-align:center;border-bottom:2px solid #ddd;">주문일</th>
+    				<th style="font-weight:bold;text-align:center;border-bottom:2px solid #ddd;">담당</th>
+    				<th style="font-weight:bold;text-align:center;border-bottom:2px solid #ddd;">상태</th>
+    				<th style="font-weight:bold;text-align:center;border-bottom:2px solid #ddd;"></th>
+    			</tr>
+    			<c:forEach var="list" items="${orderList }" varStatus="i">
+    				<c:if test="${list.state ne '4' }">
+	    				<tr>
+	    					<td style="font-size:15px;text-align:center;padding-top:7px;padding-bottom:7px;">[${list.inDate.substring(5,16) }]</td>
+	    					<td style="font-size:15px;text-align:center;padding-top:7px;padding-bottom:7px;">${list.staffName }</td>
+	    					<c:choose>
+		    					<c:when test="${list.state == '1'}">
+		    						<td onclick="" style="font-size:15px;text-align:center;padding-top:7px;padding-bottom:7px;color:#050099;font-weight:bold;">수거대기</td>
+		    					</c:when>
+		    					<c:when test="${list.state == '2'}">
+		    						<td style="font-size:15px;text-align:center;padding-top:7px;padding-bottom:7px;color:#22741C;font-weight:bold;">수거완료</td>
+		    					</c:when>
+		    					<c:when test="${list.state == '3'}">
+		    						<td style="font-size:15px;text-align:center;padding-top:7px;padding-bottom:7px;color:#660033;font-weight:bold;">세탁중</td>
+		    					</c:when>
+		    					<c:otherwise>
+		    						<td style="font-size:15px;text-align:center;padding-top:7px;padding-bottom:7px;color:#660033;font-weight:bold;"></td>
+		    					</c:otherwise>
+	    					</c:choose>
+	    					<td onclick="openNClose(${i.index})" style="font-size:15px;text-align:center;padding-top:7px;padding-bottom:7px;">▽</td>
+	    				</tr>
+	    				<tr id="tr${i.index }" style="background-color:#ddd;font-size:15px;display:none;">
+	    					<input type="hidden" id="openChk" value="1"/>
+	    					<td style="text-align:center;">
+	    						${list.userId }
+	    						<br/>(<a href="tel:${list.userHp }">${list.userHp}</a>)
+	    					</td>
+	    					<td colspan="3">
+	    						<c:forEach var="itemList" items="${list.orderList }" varStatus="j">
+	    							<c:if test="${!j.last }">
+	    								${itemList.name}(${itemList.orderCount}벌),
+	    							</c:if>
+	    							<c:if test="${j.last }">
+	    								${itemList.name}(${itemList.orderCount}벌)
+	    							</c:if>
+	    						</c:forEach>
+	    					</td>
+	    				</tr>
+    				</c:if>
+    			</c:forEach>
+    		</table>
+    	</div>
+    	
+    	<div style="width:100%;font-size:17px;display:none;" id="orderCompleteDiv">
+    		<p style="width:100%;background-color:#CC3D3D;color:white;text-align:center;border-radius:5px;">완료목록</p>
+    		<table style="width:100%;">
+    			<tr>
+    				<th style="font-weight:bold;text-align:center;border-bottom:2px solid #ddd;">주문일</th>
+    				<th style="font-weight:bold;text-align:center;border-bottom:2px solid #ddd;">담당</th>
+    				<th style="font-weight:bold;text-align:center;border-bottom:2px solid #ddd;">상태</th>
+    				<th style="font-weight:bold;text-align:center;border-bottom:2px solid #ddd;"></th>
+    			</tr>
+    			<c:forEach var="list" items="${orderList }" varStatus="i">
+    				<c:if test="${list.state eq '4' }">
+	    				<tr>
+	    					<td style="font-size:15px;text-align:center;padding-top:7px;padding-bottom:7px;">[${list.inDate.substring(5,16) }]</td>
+	    					<td style="font-size:15px;text-align:center;padding-top:7px;padding-bottom:7px;">${list.staffName }</td>
+	    					<td style="font-size:15px;text-align:center;padding-top:7px;padding-bottom:7px;color:#22741C;font-weight:bold;">세탁완료</td>
+	    					<td onclick="openNClose2(${i.index})" style="font-size:15px;text-align:center;padding-top:7px;padding-bottom:7px;">▽</td>
+	    				</tr>
+	    				<tr id="2tr${i.index }" style="background-color:#ddd;font-size:15px;display:none;">
+	    					<input type="hidden" id="openChk" value="1"/>
+	    					<td style="text-align:center;">
+	    						${list.userId }
+	    						<br/>(<a href="tel:${list.userHp }">${list.userHp}</a>)
+	    					</td>
+	    					<td colspan="3">
+	    						<c:forEach var="itemList" items="${list.orderList }" varStatus="j">
+	    							<c:if test="${!j.last }">
+	    								${itemList.name}(${itemList.orderCount}벌),
+	    							</c:if>
+	    							<c:if test="${j.last }">
+	    								${itemList.name}(${itemList.orderCount}벌)
+	    							</c:if>
+	    						</c:forEach>
+	    					</td>
+	    				</tr>
+    				</c:if>
+    			</c:forEach>
+    		</table>
+    	</div>
+	</div>
+	
+	<!-- 푸터  -->
+    <div style="overflow: hidden;" data-role="footer" data-tap-toggle="false" data-position="fixed" onclick="footerBanner();">
+	   <img src="resources/img/foot.png" style="width:100%;height:65px;margin-left:0px;"/>
+	</div>
+</section>
+
+<section id="page4" data-role="page">
+    <header data-role="header" data-tap-toggle="false" data-position="fixed" style="background-color:#F6F6F6;">
+    	<img src="resources/img/ac_logo.png"/>
+    	<!-- <a class="ui-btn-right" href="#page9" data-icon="gear" style="background-color:rgba(255,255,255,0.5);margin-top:15px;"><font style="font-weight:bold;color:red;">MY</font></a> -->
+    	<div data-role="navbar">
+            <ul>
+                <li><a href="#page1" data-transition="none"><font style="font-size:16px;">상품</font></a></li>
+                <li><a href="#page2" data-transition="none"><font style="font-size:16px;">체인점</font></a></li>
+                <li><a href="#page3" data-transition="none"><font style="font-size:16px;">세탁물</font></a></li>
                 <li><a href="#" class="ui-btn-active ui-state-persist"><font style="font-size:16px;">프로모션</font></a></li>
                 
             </ul>
@@ -555,9 +760,31 @@
     
     <!-- 푸터  -->
     <div style="overflow: hidden;" data-role="footer" data-tap-toggle="false" data-position="fixed" onclick="footerBanner();">
-	   <img src="resources/img/jbFoot.png" style="width:100%;height:65px;margin-left:0px;"/>
+	   <img src="resources/img/foot.png" style="width:100%;height:65px;margin-left:0px;"/>
 	</div>
 </section> 
 
+<section id="page5" data-role="page">
+	<header data-role="header" data-tap-toggle="false" data-position="fixed" style="background-color:#F6F6F6;">
+    	<img src="resources/img/ac_logo.png"/>
+    	<!-- <a class="ui-btn-right" href="#page9" data-icon="gear" style="background-color:rgba(255,255,255,0.5);margin-top:15px;"><font style="font-weight:bold;color:red;">MY</font></a> -->
+    	<!-- <div data-role="navbar">
+            <ul>
+                <li><a href="#page1" data-transition="none"><font style="font-size:16px;">상품관리</font></a></li>
+                <li><a href="#page2" data-transition="none"><font style="font-size:16px;">체인점관리</font></a></li>
+                <li><a href="#" class="ui-btn-active ui-state-persist"><font style="font-size:16px;">프로모션</font></a></li>
+                
+            </ul>
+        </div> --><!-- /navbar -->
+    </header>
+    
+    <div class="content" data-role="content">
+    	<div style="margin-top:50px;text-align:center;">
+    		<p style="color:#030066;font-weight:bold;">관리자 전용페이지 입니다</p>
+    		<input type="password" class="form-control" id="loginUserId" placeholder="관리자 휴대폰번호 입력"/>
+    	</div>
+    	<button type="button" class="btn btn-labeled btn-default" style="font-weight:bold;" onclick="login();">시작하기</button>
+    </div>
+</section>
 </body>
 </html>

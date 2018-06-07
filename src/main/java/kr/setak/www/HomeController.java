@@ -13,6 +13,7 @@ import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 
+import kr.setak.www.domain.Order;
 import kr.setak.www.domain.OrderItem;
 import kr.setak.www.domain.User;
 import kr.setak.www.service.SetakService;
@@ -32,6 +33,10 @@ public class HomeController {
 		//스탭조회
 		List<User> staffList = setakService.readStaffAllServ();
 		
+		//모든세탁물 조회
+		List<Order> orderList = setakService.readAllOrderServ();
+		
+		model.addAttribute("orderList", orderList);
 		model.addAttribute("itemList", itemList);
 		model.addAttribute("staffList", staffList);
 		

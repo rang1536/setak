@@ -4,6 +4,44 @@
   "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="SetakDao">
 
+<!-- 마스터 로그인 -->
+<select id="selectMasterLogin" parameterType="kr.setak.www.domain.User" resultType="kr.setak.www.domain.User">
+	SELECT *
+	FROM user
+	WHERE userHp = #{userHp}
+	AND userGrade = #{userGrade}
+	
+</select>
+
+<!-- 토큰으로 유저확인 -->
+<select id="selectUserByToken" parameterType="kr.setak.www.domain.User" resultType="int">
+	SELECT COUNT(*)
+	FROM user
+	<trim prefix="WHERE" prefixOverrides="AND">
+		<if test="userNo != null and userNo != '' and userNo != 0">userNo = #{userNo}</if>
+		<if test="kakaoId != null and kakaoId != ''">kakaoId = #{kakaoId}</if>
+		<if test="facebookId != null and facebookId != ''">facebookId = #{facebookId}</if>
+	</trim>
+</select>
+
+<!-- 토큰 인서트 -->
+<insert id="insertUserToken" parameterType="kr.setak.www.domain.User" useGeneratedKeys="true" keyProperty="userNo">
+	INSERT INTO user(
+		userId, token, userGrade, regDate, orderCount
+		<if test="userEmail != null and userEmail != ''">,userEmail</if>
+		<if test="gender != null and gender != ''">,gender</if>
+		<if test="kakaoId != null and kakaoId != ''">,kakaoId</if>
+		<if test="facebookId != null and facebookId != ''">,facebookId</if>
+		)
+	VALUES(
+		#{userId}, #{token}, 'user', now(), 0
+		<if test="userEmail != null and userEmail != ''">,#{userEmail}</if>
+		<if test="gender != null and gender != ''">,#{gender}</if>
+		<if test="kakaoId != null and kakaoId != ''">,#{kakaoId}</if>
+		<if test="facebookId != null and facebookId != ''">,#{facebookId}</if>
+		)
+</insert>
+
 <!-- 상품조회 -->
 <select id="selectAllItems" resultType="kr.setak.www.domain.OrderItem">
 	SELECT *
@@ -14,7 +52,8 @@
 <select id="selectUserInfo" parameterType="String" resultType="kr.setak.www.domain.User">
 	SELECT *
 	FROM user
-	WHERE userId = #{userID}	
+	WHERE userId = #{userID}
+	
 </select>
 
 <!-- 로그인 -->
@@ -22,19 +61,23 @@
 	SELECT *
 	FROM user
 	WHERE userId = #{userId}
-	<if test="userHp != null and userHp != ''">AND userHp = #{userHp}</if>
+	<if test="userHp != null and userHp !=''">AND userHp = #{userHp}</if>
+	<if test="userNo != null and userNo != ''">AND userNo = #{userNo}</if>	
+</select>
+
+<!-- 로그인 -->
+<select id="selectLogin2" parameterType="int" resultType="kr.setak.www.domain.User">
+	SELECT *
+	FROM user
+	WHERE userNo=#{userNo}
 </select>
 
 <!-- 수거신청등록 -->
 <insert id="insertApplyOrder" parameterType="kr.setak.www.domain.Order" useGeneratedKeys="true" keyProperty="orderNo">
 	INSERT INTO applyorder(inDate, state, totalPrice, userNo, orderAdd, deliveryAdd, sameAddCheck, sangseAdd
-		<if test="hopeCollectionDate != null and hopeCollectionDate != ''">,hopeCollectionDate</if>
-		<if test="hopeDeliveryDate != null and hopeDeliveryDate != ''">,hopeDeliveryDate</if>
 		<if test="comment != null and comment != ''">,comment</if>)
 	VALUES(
 		now(), '1', #{totalPrice}, #{userNo}, #{orderAdd}, #{deliveryAdd} , #{sameAddCheck}, #{sangseAdd}
-		<if test="hopeCollectionDate != null and hopeCollectionDate != ''">,#{hopeCollectionDate}</if>
-		<if test="hopeDeliveryDate != null and hopeDeliveryDate != ''">,#{hopeDeliveryDate}</if>
 		<if test="comment != null and comment != ''">,#{comment}</if>)
 </insert>
 
@@ -76,6 +119,7 @@
 	SELECT *
 	FROM user
 	WHERE userGrade = 'staff'
+	or userGrade = 'master'
 </select>
 
 <!-- 웹, 스탭등록 -->
@@ -112,12 +156,22 @@
 	WHERE userNo = #{userNo}
 </update>
 
+<!-- 토큰 저장 -->
+<update id="updateUserTokenBySns" parameterType="kr.setak.www.domain.User">
+	UPDATE user
+	SET token = #{token}
+	<trim prefix="WHERE" prefixOverrides="AND">
+		<if test="kakaoId != null and kakaoId != ''">kakaoId = #{kakaoId}</if>
+		<if test="facebookId != null and facebookId != ''">facebookId = #{facebookId}</if>
+	</trim>
+</update>
+
 <!-- 푸쉬를 위한 스탭조회 -->
 <select id="selectStaffNAdmin" resultType="kr.setak.www.domain.User">
 	SELECT *
 	FROM user
 	WHERE userGrade = 'staff'
-	OR userGrade = 'admin'
+	OR userGrade = 'master'
 </select>
 
 <!-- 회원가입 -->
@@ -130,7 +184,9 @@
 <update id="updateSetakState" parameterType="kr.setak.www.domain.User">
 	UPDATE user
 	SET userAdd = #{userAdd},
-		orderCount = 1
+		sangseAdd = #{sangseAdd},
+		userHp = #{userHp},
+		orderCount = #{orderCount}
 	WHERE userNo = #{userNo}
 </update>
 
@@ -138,5 +194,121 @@
 <select id="selectUserAll" resultType="kr.setak.www.domain.User">
 	SELECT *
 	FROM user
+</select>
+
+<!-- 하나의회원조회 -->
+<select id="selectUserForApp" resultType="kr.setak.www.domain.User">
+	SELECT *
+	FROM user
+	WHERE userNo = #{userNo}
+</select>
+
+<!-- 회원삭제 -->
+<delete id="deleteUser" parameterType="kr.setak.www.domain.User">
+	DELETE 
+	FROM user
+	WHERE userNo = #{userNo}
+</delete>
+
+<!-- 세탁주문 조회(완료제외) -->
+<select id="selectOrderList" parameterType="int" resultType="kr.setak.www.domain.Order">
+	SELECT *
+	FROM applyorder
+	WHERE userNo = #{userNo}
+	AND state != '4'
+</select>
+
+<!-- 세탁주문 조회(완료) -->
+<select id="selectCompleteList" parameterType="int" resultType="kr.setak.www.domain.Order">
+	SELECT *
+	FROM applyorder
+	WHERE userNo = #{userNo}
+	AND state = '4'
+</select>
+
+<!-- 직원> 배정된 나의 세탁목록 조회  -->
+<select id="selectListByStaffNo" parameterType="int" resultType="kr.setak.www.domain.Order">
+	SELECT *
+	FROM applyorder
+	WHERE receiveUserNo = #{userNo}
+	AND state != '4'
+</select>
+
+<!-- 주문고객 핸드폰번호 조회-->
+<select id="selectHpForApp" parameterType="int" resultType="String">
+	SELECT userHp
+	FROM user
+	WHERE userNo = #{userNo}
+</select>
+
+<!-- 신청세탁물 조회 -->
+<select id="selectOrderedItemAll" parameterType="int" resultType="kr.setak.www.domain.OrderedItem">
+	SELECT a.*, b.name, b.price
+	FROM ordereditem a,
+		 orderitem b
+	WHERE a.no = b.no
+	AND a.orderNo = #{orderNo}		
+</select>
+
+<!-- 핸드폰중복검사 위한 조회 -->
+<select id="selectUserByHp" parameterType="String" resultType="kr.setak.www.domain.User">
+	SELECT *
+	FROM user
+	WHERE userHp = #{userHP}
+</select>
+
+<!-- 회원정보수정 -->
+<update id="updateUserInfoByApp" parameterType="kr.setak.www.domain.User">
+	UPDATE user
+	SET userId = #{userId},
+		userHp = #{userHp},
+		gender = #{gender}
+	WHERE userNo = #{userNo}
+</update>
+
+<!-- 배송대기 주문확인 -->
+<select id="selectOrderByStateStay" resultType="kr.setak.www.domain.Order">
+	SELECT *
+	FROM applyorder
+	WHERE state = '1'
+	
+</select>
+
+<!-- 주문번호로 수거정보조회 -->
+<select id="selectOrderByOrderNo" parameterType="int" resultType="kr.setak.www.domain.Order">
+	SELECT *
+	FROM applyorder
+	WHERE orderNo = #{orderNo}
+</select>
+
+<!-- 배송직원 할당 후 체크 -->
+<update id="updateOrderStaffCheck" parameterType="kr.setak.www.domain.Order">
+	UPDATE applyorder
+	SET state = #{state},
+		receiveUserNo = #{receiveUserNo}
+	WHERE orderNo = #{orderNo}
+</update>
+
+<!-- sns로 직원조회 -->
+<select id="selectUserBySnsId" resultType="kr.setak.www.domain.User" parameterType="kr.setak.www.domain.User">
+	SELECT *
+	FROM user
+	<trim prefix="WHERE" prefixOverrides="AND">
+		<if test="kakaoId != null and kakaoId != ''">kakaoId = #{kakaoId}</if>
+		<if test="facebookId != null and facebookId != ''">facebookId = #{facebookId}</if>
+	</trim>
+</select>
+
+<select id="selectUserCntByCheck" parameterType="int" resultType="int">
+	SELECT COUNT(*)
+	FROM user
+	WHERE userNo = #{userNo}
+</select>
+
+<select id="selectAllOrder" resultType="kr.setak.www.domain.Order">
+	SELECT a.*, b.userId as staffName, b.userHp as staffHp
+	FROM applyorder a, user b
+	WHERE a.receiveUserNo = b.userNo
+	ORDER BY inDate DESC
 </select>
 </mapper>
