@@ -313,9 +313,9 @@
 	    			var userId = $('#modifyStaffTb').find('#userId').val();
 	    			var userHp = $('#modifyStaffTb').find('#userHp').val();
 	    			var userNo = $('#modifyStaffTb').find('#userNo').val();
-	    			
+	    			console.log("체크 : "+userId+" "+userHp+" "+userNo);
 	    			$.ajax({
-	    				url : 'modifySetakItem',
+	    				url : 'modifyStaff',
 	    				data : {'userId':userId, 'userHp':userHp, 'userNo': userNo},
 	    				dataType : 'json',
 	    				type : 'post',

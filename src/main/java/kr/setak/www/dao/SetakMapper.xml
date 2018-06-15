@@ -132,7 +132,7 @@
 <update id="updateStaff" parameterType="kr.setak.www.domain.User">
 	UPDATE user
 	SET userId = #{userId},
-		userHp = #{userHp},
+		userHp = #{userHp}
 	WHERE userNo = #{userNo}	
 </update>
 
