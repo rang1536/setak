@@ -37,6 +37,23 @@
 		.subDiv{width:100%;border:1px solid #ddd;background-color:#EAEAEA;color:#00000;}
 		.contents{width:100%;padding-top:5px;font-weight:bold;border:2px solid #0054FF;"}
 		.subTH{text-align:center;}
+		.loader{width: 100%;
+			height: 100%;
+			top: 0;
+			left: 0;
+			position: fixed;
+			display: block;
+			opacity: 0.8;
+			background: white;
+			z-index: 99;
+			text-align: center;
+		}
+		.loader img{
+			position: absolute;
+			top: 50%;
+			left: 50%;
+			z-index: 100;
+		}
 	</style>
 	
 	<script>
@@ -365,15 +382,17 @@
 		var msg = $('#sendMsg').val();
 		
 		if(confirm('푸쉬알림을 보내시겠습니까?')){
+			$('.loader').css('display','');
 			$.ajax({
 				url : 'sendPush',
 				data : {'sendMsg':msg},
 				dataType : 'json',
 				type : 'post',
 				success : function(data){
+					$('.loader').css('display','none');
 					if(data.result = 'success'){
 						alert('알림을 발송하였습니다.');
-						window.location.reload(true);
+						$('#sendMsg').val('');
 					}
 				}
 			})
@@ -418,7 +437,9 @@
 	</script>
 </head>
 <body>
-
+<div class="loader" style="display:none;">
+	<img src="resources/img/2.gif" alt="loading">
+</div>
 <section id="page1" data-role="page">
     <header data-role="header" data-tap-toggle="false" data-position="fixed" style="background-color:#F6F6F6;">
     	<img src="resources/img/ac_logo.png" />

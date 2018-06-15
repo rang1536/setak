@@ -174,7 +174,7 @@ public class SetakService {
 		
 		//푸쉬알림 - 고객
 		UtilSendPush sendPush = new UtilSendPush();
-		String userTitle = "세탁풍경 수거신청완료";
+		String userTitle = "수거신청완료 - 당겨주세요 ▼";
 		String userContent = "수거신청이 완료되었습니다. \n 수거하실 기사님을 배정중입니다.\n 감사합니다";
 		sendPush.androidSendPush(selectUser.getToken(), "applyList", userTitle, userContent);
 		
@@ -186,7 +186,7 @@ public class SetakService {
 		String applyDate = order.getInDate();
 		String address = order.getDeliveryAdd();
 		
-		String title = "세탁물 수거신청\n" + userName +"("+userPhone+")님 신청";
+		String title = "세탁물 수거신청\n" + userName +"("+userPhone+")님 신청 ▼";
 		String content = "신청일-"+applyDate+"\n";
 		content += "세탁물-"+userProduct +"\n";
 		content += "주소-"+address;
@@ -204,7 +204,8 @@ public class SetakService {
 		List<User> list = setakDao.selectUserAll();
 		
 		UtilSendPush sendPush = new UtilSendPush();
-		String title = "세탁풍경 알림";
+		String title = "세탁풍경 알림 - 당겨주세요 ▼";
+		/*sendPush.androidSendPush("c9btZruq3Rg:APA91bEweKgNWgQb_xWtkcH3EaWpRrW6gXYzpa8ac_PKq1HNz6HDuKgJbrUShgogOvBhFXp3kwStWm1ssUtzg2e4FatuzBt8xT98ocRdwbYl15kJ3QMcfsgGccw3Jja29t_ZAUwXUHOZ", "all", title, sendMsg);*/
 		for(int i=0; i<list.size(); i++){
 			System.out.println(i+"번째 발송 토큰확인 : "+list.get(i).getToken());
 			sendPush.androidSendPush(list.get(i).getToken(), "all", title, sendMsg);
@@ -378,7 +379,7 @@ public class SetakService {
 				
 				//푸쉬알림 - 고객
 				UtilSendPush sendPush = new UtilSendPush();
-				String userTitle = "세탁풍경";
+				String userTitle = "세탁풍경 알림 - 당겨주세요 ▼";
 				String userContent = "세탁풍경의 가족이 되신걸 환영합니다.";
 				sendPush.androidSendPush(user.getToken(), "main", userTitle, userContent);
 			}else{
@@ -510,7 +511,7 @@ public class SetakService {
 				User staff = setakDao.selectStaff(user.getUserNo());
 				//푸쉬알림 - 고객
 				UtilSendPush sendPush = new UtilSendPush();
-				String userTitle = "세탁풍경 알림";
+				String userTitle = "세탁풍경 알림 - 당겨주세요 ▼";
 				String userContent = "수거하실 기사님("+staff.getUserId()+"-"+staff.getUserHp()+")이 배정되었습니다.";
 				sendPush.androidSendPush(userInfo.getToken(), "applyList", userTitle, userContent);
 				
@@ -547,7 +548,7 @@ public class SetakService {
 			User userInfo = setakDao.selectUserForApp(orderCheck.getUserNo());
 			//푸쉬알림 - 고객
 			UtilSendPush sendPush = new UtilSendPush();
-			String userTitle = "세탁풍경 알림";
+			String userTitle = "세탁풍경 알림 - 당겨주세요 ▼";
 			String userContent = "";
 			if(Integer.parseInt(orderCheck.getState()) == 3) {
 				userContent = "수거된 세탁물을 세탁을 시작합니다";
@@ -590,7 +591,7 @@ public class SetakService {
 					list.get(i).setUserId(user.getUserId());
 					list.get(i).setUserHp(user.getUserHp());
 				}
-				System.out.println(i+" 번째 리스트확인 : "+list.get(i));
+				//System.out.println(i+" 번째 리스트확인 : "+list.get(i));
 			}
 		}
 		

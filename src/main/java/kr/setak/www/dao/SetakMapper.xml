@@ -220,18 +220,20 @@
 
 <!-- 세탁주문 조회(완료) -->
 <select id="selectCompleteList" parameterType="int" resultType="kr.setak.www.domain.Order">
-	SELECT *
-	FROM applyorder
-	WHERE userNo = #{userNo}
+	SELECT a.*, b.userHp as userHp
+	FROM applyorder a, user b
+	WHERE a.userNo = #{userNo}
 	AND state = '4'
+	AND a.userNo = b.userNo
 </select>
 
 <!-- 직원> 배정된 나의 세탁목록 조회  -->
 <select id="selectListByStaffNo" parameterType="int" resultType="kr.setak.www.domain.Order">
-	SELECT *
-	FROM applyorder
-	WHERE receiveUserNo = #{userNo}
+	SELECT a.*, b.userHp as userHp
+	FROM applyorder a, user b
+	WHERE a.receiveUserNo = #{userNo}
 	AND state != '4'
+	AND a.userNo = b.userNo
 </select>
 
 <!-- 주문고객 핸드폰번호 조회-->
@@ -268,9 +270,10 @@
 
 <!-- 배송대기 주문확인 -->
 <select id="selectOrderByStateStay" resultType="kr.setak.www.domain.Order">
-	SELECT *
-	FROM applyorder
+	SELECT a.*, b.userHp as userHp
+	FROM applyorder a, user b
 	WHERE state = '1'
+	AND a.userNo = b.userNo
 	
 </select>
 

@@ -63,7 +63,10 @@ public class UtilSendPush {
             // 이렇게 보내면 주제를 ALL로 지정해놓은 모든 사람들한테 알림을 날려준다.
             /*String input = "{\"notification\" : {\"title\" : \"여기다 제목 넣기 \", \"body\" : \"여기다 내용 넣기\"}, \"to\":\"/topics/ALL\"}";*/
            
+            String imgUrl = "http://seapp.cafe24.com/resources/img/ac_logo.png";
             // 이걸로 보내면 특정 토큰을 가지고있는 어플에만 알림을 날려준다  위에 둘중에 한개 골라서 날려주자
+            /*String input = "{\"notification\" : {\"title\" : \""+ title +"\", \"body\" : \""+content+"\"}, \"data\" : {\"imgUrl\":\""+imgUrl+"\"}, \"to\":\""+token+"\", \"click_action\":\"android.intent.action.MAIN\" }";
+            */
             String input = "{\"notification\" : {\"title\" : \""+ title +"\", \"body\" : \""+content+"\"}, \"to\":\""+token+"\", \"click_action\":\"android.intent.action.MAIN\" }";
 
             OutputStream os = conn.getOutputStream();
